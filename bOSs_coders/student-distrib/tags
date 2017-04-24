@@ -1,0 +1,540 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+ADDR_16	idt_handle.h	13;"	d
+ADDR_32	idt_handle.h	12;"	d
+ASM	boot.S	/^#define ASM     1$/;"	d
+ASM	excp_int_sys.S	/^#define ASM 1$/;"	d
+ASM	helper.S	/^#define ASM 1$/;"	d
+ASM	pcb.S	/^#define ASM 1$/;"	d
+ASM	x86_desc.S	/^#define ASM     1$/;"	d
+ASSERT	debug.h	12;"	d
+ASSERT	debug.h	26;"	d
+ATTRIB	lib.c	9;"	d	file:
+BKSP	ps2_keyboard.h	16;"	d
+BLOCK_SIZE	file_system.c	7;"	d	file:
+BUFFER_SIZE	paging.c	10;"	d	file:
+CC	Makefile	/^CC=gcc$/;"	m
+CHECK_FLAG	kernel.c	17;"	d	file:
+CLOSE	system_call.c	11;"	d	file:
+CL_SC	ps2_keyboard.c	34;"	d	file:
+CTRL_L	ps2_keyboard.h	15;"	d
+CTRL_SC	ps2_keyboard.c	27;"	d	file:
+CTRL_SC_R	ps2_keyboard.c	28;"	d	file:
+CURSOR_ATTR	lib.c	17;"	d	file:
+CURSOR_DATA	lib.c	16;"	d	file:
+DEL_SC	ps2_keyboard.c	29;"	d	file:
+EMPTY_ELEM	lib.c	21;"	d	file:
+ENTRY_SIZE	file_system.c	5;"	d	file:
+EOI	i8259.h	33;"	d
+ERR	lib.c	13;"	d	file:
+EXCEPTION_HANDLER_H	exception_handler.h	2;"	d
+EXCP_INT_SYS_H	excp_int_sys.h	2;"	d
+FALSE	system_call.c	14;"	d	file:
+FD_NUM	pcb.h	7;"	d
+FILE_SYSTEM_H	file_system.h	2;"	d
+FILE_SYS_START	file_system.c	4;"	d	file:
+FREQ1	rtc.c	11;"	d	file:
+FREQ10	rtc.c	20;"	d	file:
+FREQ2	rtc.c	12;"	d	file:
+FREQ3	rtc.c	13;"	d	file:
+FREQ4	rtc.c	14;"	d	file:
+FREQ5	rtc.c	15;"	d	file:
+FREQ6	rtc.c	16;"	d	file:
+FREQ7	rtc.c	17;"	d	file:
+FREQ8	rtc.c	18;"	d	file:
+FREQ9	rtc.c	19;"	d	file:
+FSYSTEM_SIZE	file_system.c	6;"	d	file:
+ICW1	i8259.h	23;"	d
+ICW2_MASTER	i8259.h	24;"	d
+ICW2_SLAVE	i8259.h	25;"	d
+ICW3_MASTER	i8259.h	26;"	d
+ICW3_SLAVE	i8259.h	27;"	d
+ICW4	i8259.h	28;"	d
+IDT_HANDLE_H	idt_handle.h	2;"	d
+IDT_SIZE	idt_handle.h	22;"	d
+KB	paging.c	6;"	d	file:
+KB	paging.h	4;"	d
+KBD_BUF_SIZE	ps2_keyboard.h	18;"	d
+KB_4	paging.c	7;"	d	file:
+KB_4	paging.h	5;"	d
+KERNAL_START	paging.h	6;"	d
+KERNEL_CS	x86_desc.h	12;"	d
+KERNEL_DS	x86_desc.h	13;"	d
+KERNEL_LDT	x86_desc.h	17;"	d
+KERNEL_START	paging.c	8;"	d	file:
+KERNEL_TSS	x86_desc.h	16;"	d
+LOWER_8	lib.c	19;"	d	file:
+L_SHIFT_SC	ps2_keyboard.c	30;"	d	file:
+L_SHIFT_SC_R	ps2_keyboard.c	31;"	d	file:
+MASTER_8259_COMMAND	i8259.h	14;"	d
+MASTER_8259_DATA	i8259.h	16;"	d
+MASTER_8259_PORT	i8259.h	12;"	d
+MB	paging.c	9;"	d	file:
+MB	system_call.c	15;"	d	file:
+MULTIBOOT_BOOTLOADER_MAGIC	multiboot.h	11;"	d
+MULTIBOOT_HEADER_FLAGS	multiboot.h	9;"	d
+MULTIBOOT_HEADER_MAGIC	multiboot.h	10;"	d
+NAME_LENGTH	file_system.h	4;"	d
+NULL	types.h	10;"	d
+NUM_COLS	lib.c	7;"	d	file:
+NUM_EXCP	idt_handle.h	20;"	d
+NUM_INT	idt_handle.h	18;"	d
+NUM_ROWS	lib.c	8;"	d	file:
+NUM_VEC	x86_desc.h	23;"	d
+OBJS	Makefile	/^OBJS=boot.o$/;"	m
+OFF	lib.c	11;"	d	file:
+OFF	ps2_keyboard.c	36;"	d	file:
+ON	lib.c	12;"	d	file:
+ON	ps2_keyboard.c	37;"	d	file:
+OPEN	system_call.c	10;"	d	file:
+PAGING_H	paging.h	2;"	d
+PCB	pcb.h	/^} PCB;$/;"	t	typeref:struct:_PCB
+PCB_BITMASK	system_call.h	4;"	d
+PCB_H	pcb.h	3;"	d
+PS2_KB_IRQ	ps2_keyboard.c	22;"	d	file:
+PS2_KB_PORT	ps2_keyboard.c	21;"	d	file:
+PS2_KEYBOARD_H	ps2_keyboard.h	11;"	d
+RATE1	rtc.c	21;"	d	file:
+RATE10	rtc.c	30;"	d	file:
+RATE2	rtc.c	22;"	d	file:
+RATE3	rtc.c	23;"	d	file:
+RATE4	rtc.c	24;"	d	file:
+RATE5	rtc.c	25;"	d	file:
+RATE6	rtc.c	26;"	d	file:
+RATE7	rtc.c	27;"	d	file:
+RATE8	rtc.c	28;"	d	file:
+RATE9	rtc.c	29;"	d	file:
+RATE_MASK	rtc.c	31;"	d	file:
+READ	system_call.c	8;"	d	file:
+RTC_CMOS	rtc.h	16;"	d
+RTC_H	rtc.h	8;"	d
+RTC_IRQ	rtc.h	21;"	d
+RTC_PORT	rtc.h	15;"	d
+RTC_REG	rtc.h	17;"	d
+RTC_STATUS	rtc.h	22;"	d
+RTC_STATUS_A	rtc.h	18;"	d
+RTC_STATUS_B	rtc.h	19;"	d
+RTC_STATUS_C	rtc.h	20;"	d
+R_SHIFT_SC	ps2_keyboard.c	32;"	d	file:
+R_SHIFT_SC_R	ps2_keyboard.c	33;"	d	file:
+SC_TABLE_SIZE	ps2_keyboard.c	24;"	d	file:
+SEG_DESC_SIZE	idt_handle.h	15;"	d
+SET_IDT_ENTRY	x86_desc.h	171;"	d
+SET_LDT_PARAMS	x86_desc.h	128;"	d
+SET_TSS_PARAMS	x86_desc.h	138;"	d
+SHIFT_OFFSET	ps2_keyboard.c	25;"	d	file:
+SLAVE_8259_COMMAND	i8259.h	15;"	d
+SLAVE_8259_DATA	i8259.h	17;"	d
+SLAVE_8259_PORT	i8259.h	13;"	d
+SRC	Makefile	/^SRC=$(wildcard *.S) $(wildcard *.c) $(wildcard *\/*.S) $(wildcard *\/*.c)$/;"	m
+SUCC	lib.c	14;"	d	file:
+SUPER_PRIV	idt_handle.h	8;"	d
+SYSTEM_CALL_H	system_call.h	2;"	d
+TRUE	system_call.c	13;"	d	file:
+TSS_SIZE	x86_desc.h	20;"	d
+TYPE0	file_system.c	8;"	d	file:
+TYPE1	file_system.c	9;"	d	file:
+TYPE2	file_system.c	10;"	d	file:
+UPPER_8	lib.c	18;"	d	file:
+USER_CS	x86_desc.h	14;"	d
+USER_DS	x86_desc.h	15;"	d
+USER_PRIV	idt_handle.h	9;"	d
+VIDEO	lib.c	6;"	d	file:
+VIDEO	paging.c	5;"	d	file:
+WRITE	system_call.c	9;"	d	file:
+_DEBUG_H	debug.h	6;"	d
+_I8259_H	i8259.h	7;"	d
+_LIB_H	lib.h	6;"	d
+_MULTIBOOT_H	multiboot.h	7;"	d
+_PCB	pcb.h	/^typedef struct _PCB$/;"	s
+_TYPES_H	types.h	8;"	d
+_X86_DESC_H	x86_desc.h	7;"	d
+_dentry_t	file_system.h	/^typedef struct _dentry_t{$/;"	s
+_gdt	x86_desc.S	/^_gdt:$/;"	l
+_idt	x86_desc.S	/^_idt:$/;"	l
+_open_file	pcb.h	/^typedef struct _open_file$/;"	s
+_start	boot.S	/^_start:$/;"	l
+_tss	x86_desc.S	/^_tss:$/;"	l
+accessed	paging.h	/^    int accessed; \/\/1 if it has been read\/written$/;"	m	struct:__anon1
+accessed	paging.h	/^    int accessed; \/\/1 if it has been read\/written$/;"	m	struct:__anon2
+add_kbd_buf	lib.c	/^add_kbd_buf(int8_t* buf, char c, int* buf_end)$/;"	f
+addr	multiboot.h	/^	uint32_t addr;$/;"	m	struct:elf_section_header_table
+addr	x86_desc.h	/^	uint32_t addr;$/;"	m	struct:x86_desc
+args_buf	pcb.h	/^  uint8_t args_buf[KBD_BUF_SIZE-1];$/;"	m	struct:_PCB
+avail	x86_desc.h	/^			uint32_t avail : 1;$/;"	m	struct:seg_desc::__anon3::__anon4
+base_15_00	x86_desc.h	/^			uint16_t base_15_00;$/;"	m	struct:seg_desc::__anon3::__anon4
+base_23_16	x86_desc.h	/^			uint8_t base_23_16;$/;"	m	struct:seg_desc::__anon3::__anon4
+base_31_24	x86_desc.h	/^			uint8_t base_31_24;$/;"	m	struct:seg_desc::__anon3::__anon4
+base_addr_high	multiboot.h	/^	uint32_t base_addr_high;$/;"	m	struct:memory_map
+base_addr_low	multiboot.h	/^	uint32_t base_addr_low;$/;"	m	struct:memory_map
+boot_device	multiboot.h	/^	uint32_t boot_device;$/;"	m	struct:multiboot_info
+bss_end_addr	multiboot.h	/^	uint32_t bss_end_addr;$/;"	m	struct:multiboot_header
+buf_end	ps2_keyboard.c	/^static int buf_end = 0;$/;"	v	file:
+cache_dis	paging.h	/^    int cache_dis; \/\/1 if you don't want caching$/;"	m	struct:__anon1
+cache_dis	paging.h	/^    int cache_dis; \/\/1 if you don't want caching$/;"	m	struct:__anon2
+caps_lock_on	ps2_keyboard.c	/^static volatile unsigned int caps_lock_on = OFF;$/;"	v	file:
+checksum	multiboot.h	/^	uint32_t checksum;$/;"	m	struct:multiboot_header
+child_pcb	pcb.h	/^  struct _PCB* child_pcb;$/;"	m	struct:_PCB	typeref:struct:_PCB::_PCB
+clear	lib.c	/^clear(void)$/;"	f
+cli	lib.h	112;"	d
+cli_and_save	lib.h	124;"	d
+close	system_call.c	/^int32_t close (int32_t fd){$/;"	f
+cmdline	multiboot.h	/^	uint32_t cmdline;$/;"	m	struct:multiboot_info
+continue	boot.S	/^continue:$/;"	l
+cr3	x86_desc.h	/^	uint32_t cr3;$/;"	m	struct:tss_t
+cs	x86_desc.h	/^	uint16_t cs;$/;"	m	struct:tss_t
+cs_pad	x86_desc.h	/^	uint16_t cs_pad;$/;"	m	struct:tss_t
+ctrl_on	ps2_keyboard.c	/^static volatile unsigned int ctrl_on = OFF;$/;"	v	file:
+debug_trap	x86_desc.h	/^	uint16_t debug_trap : 1;$/;"	m	struct:tss_t
+debugf	debug.h	19;"	d
+debugf	debug.h	28;"	d
+dentry_t	file_system.h	/^} dentry_t;$/;"	t	typeref:struct:_dentry_t
+dir_close	file_system.c	/^int32_t dir_close() {$/;"	f
+dir_fn	system_call.c	/^uint32_t dir_fn[4] = { (uint32_t)&dir_read, (uint32_t)&dir_write, (uint32_t)&dir_open, (uint32_t)&dir_close };$/;"	v
+dir_open	file_system.c	/^int32_t dir_open(const uint8_t* filename) {$/;"	f
+dir_read	file_system.c	/^int32_t dir_read(int32_t fd, uint8_t* buf, int32_t n_bytes, open_file* cur_file){$/;"	f
+dir_write	file_system.c	/^int32_t dir_write(int32_t fd, void* buf, int32_t n_bytes){$/;"	f
+directory	paging.h	/^} directory;$/;"	t	typeref:struct:__anon1
+dirty	paging.h	/^    int dirty; \/\/1 if it has been written to$/;"	m	struct:__anon2
+disable_irq	i8259.c	/^disable_irq(uint32_t irq_num) {$/;"	f
+dpl	x86_desc.h	/^			uint32_t dpl : 2;$/;"	m	struct:seg_desc::__anon3::__anon4
+dpl	x86_desc.h	/^		uint32_t dpl : 2;$/;"	m	struct:idt_desc_t::__anon5
+ds	x86_desc.h	/^	uint16_t ds;$/;"	m	struct:tss_t
+ds_pad	x86_desc.h	/^	uint16_t ds_pad;$/;"	m	struct:tss_t
+eax	x86_desc.h	/^	uint32_t eax;$/;"	m	struct:tss_t
+ebp	x86_desc.h	/^	uint32_t ebp;$/;"	m	struct:tss_t
+ebx	x86_desc.h	/^	uint32_t ebx;$/;"	m	struct:tss_t
+ecx	x86_desc.h	/^	uint32_t ecx;$/;"	m	struct:tss_t
+edi	x86_desc.h	/^	uint32_t edi;$/;"	m	struct:tss_t
+edx	x86_desc.h	/^	uint32_t edx;$/;"	m	struct:tss_t
+eflags	x86_desc.h	/^	uint32_t eflags;$/;"	m	struct:tss_t
+eip	x86_desc.h	/^	uint32_t eip;$/;"	m	struct:tss_t
+elf_sec	multiboot.h	/^	elf_section_header_table_t elf_sec;$/;"	m	struct:multiboot_info
+elf_section_header_table	multiboot.h	/^typedef struct elf_section_header_table$/;"	s
+elf_section_header_table_t	multiboot.h	/^} elf_section_header_table_t;$/;"	t	typeref:struct:elf_section_header_table
+enable_irq	i8259.c	/^enable_irq(uint32_t irq_num) {$/;"	f
+entry	kernel.c	/^entry (unsigned long magic, unsigned long addr)$/;"	f
+entry_addr	multiboot.h	/^	uint32_t entry_addr;$/;"	m	struct:multiboot_header
+entrypoint	helper.S	/^entrypoint:$/;"	l
+err	excp_int_sys.S	/^err:$/;"	l
+es	x86_desc.h	/^	uint16_t es;$/;"	m	struct:tss_t
+es_pad	x86_desc.h	/^	uint16_t es_pad;$/;"	m	struct:tss_t
+esi	x86_desc.h	/^	uint32_t esi;$/;"	m	struct:tss_t
+esp	x86_desc.h	/^	uint32_t esp;$/;"	m	struct:tss_t
+esp0	x86_desc.h	/^	uint32_t esp0;$/;"	m	struct:tss_t
+esp1	x86_desc.h	/^	uint32_t esp1;$/;"	m	struct:tss_t
+esp2	x86_desc.h	/^	uint32_t esp2;$/;"	m	struct:tss_t
+exception0_code	excp_int_sys.S	/^exception0_code:$/;"	l
+exception10_code	excp_int_sys.S	/^exception10_code:$/;"	l
+exception11_code	excp_int_sys.S	/^exception11_code:$/;"	l
+exception12_code	excp_int_sys.S	/^exception12_code:$/;"	l
+exception13_code	excp_int_sys.S	/^exception13_code:$/;"	l
+exception14_code	excp_int_sys.S	/^exception14_code:$/;"	l
+exception15_code	excp_int_sys.S	/^exception15_code:$/;"	l
+exception16_code	excp_int_sys.S	/^exception16_code:$/;"	l
+exception17_code	excp_int_sys.S	/^exception17_code:$/;"	l
+exception18_code	excp_int_sys.S	/^exception18_code:$/;"	l
+exception19_code	excp_int_sys.S	/^exception19_code:$/;"	l
+exception1A_code	excp_int_sys.S	/^exception1A_code:$/;"	l
+exception1B_code	excp_int_sys.S	/^exception1B_code:$/;"	l
+exception1C_code	excp_int_sys.S	/^exception1C_code:$/;"	l
+exception1D_code	excp_int_sys.S	/^exception1D_code:$/;"	l
+exception1E_code	excp_int_sys.S	/^exception1E_code:$/;"	l
+exception1F_code	excp_int_sys.S	/^exception1F_code:$/;"	l
+exception1_code	excp_int_sys.S	/^exception1_code:$/;"	l
+exception2_code	excp_int_sys.S	/^exception2_code:$/;"	l
+exception3_code	excp_int_sys.S	/^exception3_code:$/;"	l
+exception4_code	excp_int_sys.S	/^exception4_code:$/;"	l
+exception5_code	excp_int_sys.S	/^exception5_code:$/;"	l
+exception6_code	excp_int_sys.S	/^exception6_code:$/;"	l
+exception7_code	excp_int_sys.S	/^exception7_code:$/;"	l
+exception8_code	excp_int_sys.S	/^exception8_code:$/;"	l
+exception9_code	excp_int_sys.S	/^exception9_code:$/;"	l
+exceptionA_code	excp_int_sys.S	/^exceptionA_code:$/;"	l
+exceptionB_code	excp_int_sys.S	/^exceptionB_code:$/;"	l
+exceptionC_code	excp_int_sys.S	/^exceptionC_code:$/;"	l
+exceptionD_code	excp_int_sys.S	/^exceptionD_code:$/;"	l
+exceptionE_code	excp_int_sys.S	/^exceptionE_code:$/;"	l
+exceptionF_code	excp_int_sys.S	/^exceptionF_code:$/;"	l
+exception_0	exception_handler.c	/^void exception_0(){$/;"	f
+exception_1	exception_handler.c	/^void exception_1(){$/;"	f
+exception_10	exception_handler.c	/^void exception_10(){$/;"	f
+exception_11	exception_handler.c	/^void exception_11(){$/;"	f
+exception_12	exception_handler.c	/^void exception_12(){$/;"	f
+exception_13	exception_handler.c	/^void exception_13(){$/;"	f
+exception_14	exception_handler.c	/^void exception_14(){$/;"	f
+exception_15	exception_handler.c	/^void exception_15(){$/;"	f
+exception_16	exception_handler.c	/^void exception_16(){$/;"	f
+exception_17	exception_handler.c	/^void exception_17(){$/;"	f
+exception_18	exception_handler.c	/^void exception_18(){$/;"	f
+exception_19	exception_handler.c	/^void exception_19(){$/;"	f
+exception_1A	exception_handler.c	/^void exception_1A(){$/;"	f
+exception_1B	exception_handler.c	/^void exception_1B(){$/;"	f
+exception_1C	exception_handler.c	/^void exception_1C(){$/;"	f
+exception_1D	exception_handler.c	/^void exception_1D(){$/;"	f
+exception_1E	exception_handler.c	/^void exception_1E(){$/;"	f
+exception_1F	exception_handler.c	/^void exception_1F(){$/;"	f
+exception_2	exception_handler.c	/^void exception_2(){$/;"	f
+exception_3	exception_handler.c	/^void exception_3(){$/;"	f
+exception_4	exception_handler.c	/^void exception_4(){$/;"	f
+exception_5	exception_handler.c	/^void exception_5(){$/;"	f
+exception_6	exception_handler.c	/^void exception_6(){$/;"	f
+exception_7	exception_handler.c	/^void exception_7(){$/;"	f
+exception_8	exception_handler.c	/^void exception_8(){$/;"	f
+exception_9	exception_handler.c	/^void exception_9(){$/;"	f
+exception_A	exception_handler.c	/^void exception_A(){$/;"	f
+exception_B	exception_handler.c	/^void exception_B(){$/;"	f
+exception_C	exception_handler.c	/^void exception_C(){$/;"	f
+exception_D	exception_handler.c	/^void exception_D(){$/;"	f
+exception_E	exception_handler.c	/^void exception_E(){$/;"	f
+exception_F	exception_handler.c	/^void exception_F(){$/;"	f
+execute	system_call.c	/^int32_t execute (const uint8_t* command){$/;"	f
+file_close	file_system.c	/^int32_t file_close() {$/;"	f
+file_fn	system_call.c	/^uint32_t file_fn[4] = { (uint32_t)&file_read, (uint32_t)&file_write, (uint32_t)&file_open, (uint32_t)&file_close };$/;"	v
+file_open	file_system.c	/^int32_t file_open(const uint8_t* filename){$/;"	f
+file_read	file_system.c	/^int32_t file_read(int32_t fd, uint8_t* buf, int32_t n_bytes, open_file* cur_file){$/;"	f
+file_system_addr	file_system.c	/^uint32_t file_system_addr;$/;"	v
+file_write	file_system.c	/^int32_t file_write(int32_t fd, void* buf, int32_t n_bytes){$/;"	f
+filepos	pcb.h	/^    uint32_t filepos;$/;"	m	struct:_open_file
+flags	multiboot.h	/^	uint32_t flags;$/;"	m	struct:multiboot_header
+flags	multiboot.h	/^	uint32_t flags;$/;"	m	struct:multiboot_info
+flags	pcb.h	/^    uint32_t flags;$/;"	m	struct:_open_file
+fname	file_system.h	/^	uint8_t fname[32];$/;"	m	struct:_dentry_t
+fs	x86_desc.h	/^	uint16_t fs;$/;"	m	struct:tss_t
+fs_pad	x86_desc.h	/^	uint16_t fs_pad;$/;"	m	struct:tss_t
+fsize	file_system.h	/^	uint32_t fsize;$/;"	m	struct:_dentry_t
+ftype	file_system.h	/^	uint8_t ftype;$/;"	m	struct:_dentry_t
+ftype_drivers	system_call.c	/^uint32_t* ftype_drivers[] = {rtc_fn, dir_fn, file_fn, stdin_fn, stdout_fn};$/;"	v
+gdt	x86_desc.S	/^gdt:$/;"	l
+gdt_bottom	x86_desc.S	/^gdt_bottom:$/;"	l
+gdt_desc	x86_desc.S	/^gdt_desc:$/;"	l
+gdt_ptr	x86_desc.S	/^gdt_ptr:$/;"	l
+getScancode	ps2_keyboard.c	/^static int getScancode(void) {$/;"	f	file:
+get_pcb	pcb.S	/^get_pcb:$/;"	l
+getargs	system_call.c	/^int32_t getargs (uint8_t* buf, int32_t nbytes){$/;"	f
+getchar	ps2_keyboard.c	/^int getchar() {$/;"	f
+global	paging.h	/^    int global; \/\/if set prevents tlb from updating the address if cr3 is reset$/;"	m	struct:__anon2
+global	paging.h	/^    int global; \/\/ignored$/;"	m	struct:__anon1
+granularity	x86_desc.h	/^			uint32_t granularity : 1;$/;"	m	struct:seg_desc::__anon3::__anon4
+gs	x86_desc.h	/^	uint16_t gs;$/;"	m	struct:tss_t
+gs_pad	x86_desc.h	/^	uint16_t gs_pad;$/;"	m	struct:tss_t
+halt	boot.S	/^halt:$/;"	l
+halt	system_call.c	/^int32_t halt (uint8_t status){$/;"	f
+header_addr	multiboot.h	/^	uint32_t header_addr;$/;"	m	struct:multiboot_header
+i8259_init	i8259.c	/^i8259_init(void) {$/;"	f
+idt	x86_desc.S	/^idt:$/;"	l
+idt_array	idt_handle.c	/^uint32_t idt_array[IDT_SIZE] = {$/;"	v
+idt_bottom	x86_desc.S	/^idt_bottom:$/;"	l
+idt_desc_ptr	x86_desc.S	/^idt_desc_ptr:$/;"	l
+idt_desc_t	x86_desc.h	/^typedef union idt_desc_t {$/;"	u
+idt_desc_t	x86_desc.h	/^} idt_desc_t;$/;"	t	typeref:union:idt_desc_t
+inb	lib.h	/^static inline uint32_t inb(port)$/;"	f
+init_idt	idt_handle.c	/^int init_idt(){$/;"	f
+initialize_kb	ps2_keyboard.c	/^void initialize_kb(void){$/;"	f
+inl	lib.h	/^static inline uint32_t inl(port)$/;"	f
+inode	file_system.h	/^	uint32_t inode;$/;"	m	struct:_dentry_t
+inode	pcb.h	/^    uint32_t inode;$/;"	m	struct:_open_file
+int16_t	types.h	/^typedef short int16_t;$/;"	t
+int32_t	types.h	/^typedef int int32_t;$/;"	t
+int8_t	types.h	/^typedef char int8_t;$/;"	t
+interrupt20_code	excp_int_sys.S	/^interrupt20_code:$/;"	l
+interrupt21_code	excp_int_sys.S	/^interrupt21_code:$/;"	l
+interrupt22_code	excp_int_sys.S	/^interrupt22_code:$/;"	l
+interrupt23_code	excp_int_sys.S	/^interrupt23_code:$/;"	l
+interrupt24_code	excp_int_sys.S	/^interrupt24_code:$/;"	l
+interrupt25_code	excp_int_sys.S	/^interrupt25_code:$/;"	l
+interrupt26_code	excp_int_sys.S	/^interrupt26_code:$/;"	l
+interrupt27_code	excp_int_sys.S	/^interrupt27_code:$/;"	l
+interrupt28_code	excp_int_sys.S	/^interrupt28_code:$/;"	l
+interrupt29_code	excp_int_sys.S	/^interrupt29_code:$/;"	l
+interrupt2A_code	excp_int_sys.S	/^interrupt2A_code:$/;"	l
+interrupt2B_code	excp_int_sys.S	/^interrupt2B_code:$/;"	l
+interrupt2C_code	excp_int_sys.S	/^interrupt2C_code:$/;"	l
+interrupt2D_code	excp_int_sys.S	/^interrupt2D_code:$/;"	l
+interrupt2E_code	excp_int_sys.S	/^interrupt2E_code:$/;"	l
+interrupt2F_code	excp_int_sys.S	/^interrupt2F_code:$/;"	l
+inw	lib.h	/^static inline uint32_t inw(port)$/;"	f
+io_base_addr	x86_desc.h	/^	uint16_t io_base_addr;$/;"	m	struct:tss_t
+io_pad	x86_desc.h	/^	uint16_t io_pad : 15;$/;"	m	struct:tss_t
+itoa	lib.c	/^itoa(uint32_t value, int8_t* buf, int32_t radix)$/;"	f
+jumptable	excp_int_sys.S	/^jumptable:$/;"	l
+keep_going	boot.S	/^keep_going:$/;"	l
+keyboard_buf	ps2_keyboard.h	/^volatile unsigned char keyboard_buf[KBD_BUF_SIZE];$/;"	v
+keyboard_complete_flag	lib.c	/^static int keyboard_complete_flag = OFF;$/;"	v	file:
+keyboard_handler	ps2_keyboard.c	/^void keyboard_handler(void) {$/;"	f
+ldt	x86_desc.S	/^ldt:$/;"	l
+ldt_bottom	x86_desc.S	/^ldt_bottom:$/;"	l
+ldt_desc	x86_desc.S	/^ldt_desc:$/;"	l
+ldt_desc_ptr	x86_desc.S	/^ldt_desc_ptr:$/;"	l
+ldt_pad	x86_desc.h	/^	uint16_t ldt_pad;$/;"	m	struct:tss_t
+ldt_segment_selector	x86_desc.h	/^	uint16_t ldt_segment_selector;$/;"	m	struct:tss_t
+ldt_size	x86_desc.S	/^ldt_size:$/;"	l
+length_high	multiboot.h	/^	uint32_t length_high;$/;"	m	struct:memory_map
+length_low	multiboot.h	/^	uint32_t length_low;$/;"	m	struct:memory_map
+lidt	x86_desc.h	194;"	d
+lldt	x86_desc.h	206;"	d
+load_addr	multiboot.h	/^	uint32_t load_addr;$/;"	m	struct:multiboot_header
+load_end_addr	multiboot.h	/^	uint32_t load_end_addr;$/;"	m	struct:multiboot_header
+ltr	x86_desc.h	181;"	d
+magic	multiboot.h	/^	uint32_t magic;$/;"	m	struct:multiboot_header
+master_mask	i8259.c	/^uint8_t master_mask; \/* IRQs 0-7 *\/$/;"	v
+mem_lower	multiboot.h	/^	uint32_t mem_lower;$/;"	m	struct:multiboot_info
+mem_upper	multiboot.h	/^	uint32_t mem_upper;$/;"	m	struct:multiboot_info
+memcpy	lib.c	/^memcpy(void* dest, const void* src, uint32_t n)$/;"	f
+memmove	lib.c	/^memmove(void* dest, const void* src, uint32_t n)$/;"	f
+memory_map	multiboot.h	/^typedef struct memory_map$/;"	s
+memory_map_t	multiboot.h	/^} memory_map_t;$/;"	t	typeref:struct:memory_map
+memset	lib.c	/^memset(void* s, int32_t c, uint32_t n)$/;"	f
+memset_dword	lib.c	/^memset_dword(void* s, int32_t c, uint32_t n)$/;"	f
+memset_word	lib.c	/^memset_word(void* s, int32_t c, uint32_t n)$/;"	f
+mmap_addr	multiboot.h	/^	uint32_t mmap_addr;$/;"	m	struct:multiboot_info
+mmap_length	multiboot.h	/^	uint32_t mmap_length;$/;"	m	struct:multiboot_info
+mod_end	multiboot.h	/^	uint32_t mod_end;$/;"	m	struct:module
+mod_start	multiboot.h	/^	uint32_t mod_start;$/;"	m	struct:module
+mods_addr	multiboot.h	/^	uint32_t mods_addr;$/;"	m	struct:multiboot_info
+mods_count	multiboot.h	/^	uint32_t mods_count;$/;"	m	struct:multiboot_info
+module	multiboot.h	/^typedef struct module {$/;"	s
+module_t	multiboot.h	/^} module_t;$/;"	t	typeref:struct:module
+multiboot_header	multiboot.h	/^typedef struct multiboot_header$/;"	s
+multiboot_header_t	multiboot.h	/^} multiboot_header_t;$/;"	t	typeref:struct:multiboot_header
+multiboot_info	multiboot.h	/^typedef struct multiboot_info$/;"	s
+multiboot_info_t	multiboot.h	/^} multiboot_info_t;$/;"	t	typeref:struct:multiboot_info
+num	multiboot.h	/^	uint32_t num;$/;"	m	struct:elf_section_header_table
+num_	ps2_keyboard.c	/^char num_[10] = {')','!','@','#','$','%','^','&','*','('};$/;"	v
+offset_15_00	x86_desc.h	/^		uint16_t offset_15_00;$/;"	m	struct:idt_desc_t::__anon5
+offset_31_16	x86_desc.h	/^		uint16_t offset_31_16;$/;"	m	struct:idt_desc_t::__anon5
+open	system_call.c	/^int32_t open (uint8_t* filename){$/;"	f
+open_file	pcb.h	/^} open_file;$/;"	t	typeref:struct:_open_file
+open_files	pcb.h	/^  open_file open_files[FD_NUM];$/;"	m	struct:_PCB
+opsize	x86_desc.h	/^			uint32_t opsize : 1;$/;"	m	struct:seg_desc::__anon3::__anon4
+outb	lib.h	85;"	d
+outl	lib.h	103;"	d
+outw	lib.h	94;"	d
+padding	x86_desc.h	/^	uint16_t padding;$/;"	m	struct:x86_desc
+page	paging.h	/^    unsigned int page[KB] __attribute__((aligned(KB_4)));$/;"	m	struct:__anon2
+page_directory	paging.c	/^directory page_directory;$/;"	v
+page_table	paging.c	/^table page_table;$/;"	v
+paging_init	paging.c	/^void paging_init()$/;"	f
+parent_pcb	pcb.h	/^  struct _PCB* parent_pcb;$/;"	m	struct:_PCB	typeref:struct:_PCB::_PCB
+pid	pcb.h	/^    uint32_t pid; \/\/which task are we in?$/;"	m	struct:_open_file
+pid	pcb.h	/^  uint32_t pid;$/;"	m	struct:_PCB
+pid_openings	system_call.c	/^uint32_t pid_openings = 0x1111;$/;"	v
+prac_sys_call	excp_int_sys.S	/^prac_sys_call:$/;"	l
+present	paging.h	/^    int present;  \/\/ 1 for present$/;"	m	struct:__anon1
+present	paging.h	/^    int present;$/;"	m	struct:__anon2
+present	x86_desc.h	/^			uint32_t present : 1;$/;"	m	struct:seg_desc::__anon3::__anon4
+present	x86_desc.h	/^		uint32_t present : 1;$/;"	m	struct:idt_desc_t::__anon5
+prev_task_link	x86_desc.h	/^	uint16_t prev_task_link;$/;"	m	struct:tss_t
+prev_task_link_pad	x86_desc.h	/^	uint16_t prev_task_link_pad;$/;"	m	struct:tss_t
+print_kbd_buf	lib.c	/^print_kbd_buf(int8_t* buf)$/;"	f
+printf	lib.c	/^printf(int8_t *format, ...)$/;"	f
+putc	lib.c	/^putc(uint8_t c)$/;"	f
+puts	lib.c	/^puts(int8_t* s)$/;"	f
+read	system_call.c	/^int32_t read (int32_t fd, void* buf, int32_t nbytes){$/;"	f
+read_data	file_system.c	/^int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length){$/;"	f
+read_dentry_by_index	file_system.c	/^int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry){$/;"	f
+read_dentry_by_name	file_system.c	/^int32_t read_dentry_by_name(uint8_t* fname, dentry_t* dentry){$/;"	f
+read_write	paging.h	/^    int read_write; \/\/1 for read\/write$/;"	m	struct:__anon1
+read_write	paging.h	/^    int read_write; \/\/1 for read\/write$/;"	m	struct:__anon2
+reserved	multiboot.h	/^	uint32_t reserved;$/;"	m	struct:module
+reserved	x86_desc.h	/^			uint32_t reserved : 1;$/;"	m	struct:seg_desc::__anon3::__anon4
+reserved0	x86_desc.h	/^		uint32_t reserved0 : 1;$/;"	m	struct:idt_desc_t::__anon5
+reserved1	x86_desc.h	/^		uint32_t reserved1 : 1;$/;"	m	struct:idt_desc_t::__anon5
+reserved2	x86_desc.h	/^		uint32_t reserved2 : 1;$/;"	m	struct:idt_desc_t::__anon5
+reserved3	x86_desc.h	/^		uint32_t reserved3 : 1;$/;"	m	struct:idt_desc_t::__anon5
+reserved4	x86_desc.h	/^		uint8_t reserved4;$/;"	m	struct:idt_desc_t::__anon5
+restore_flags	lib.h	148;"	d
+rtc_close	rtc.c	/^int32_t rtc_close()$/;"	f
+rtc_disable	rtc.c	/^void rtc_disable() {$/;"	f
+rtc_enable	rtc.c	/^void rtc_enable() {$/;"	f
+rtc_eoi	rtc.c	/^void rtc_eoi() {$/;"	f
+rtc_flag	rtc.h	/^int volatile rtc_flag;$/;"	v
+rtc_fn	system_call.c	/^uint32_t rtc_fn[4] = { (uint32_t)&rtc_read, (uint32_t)&rtc_write, (uint32_t)&rtc_open, (uint32_t)&rtc_close };$/;"	v
+rtc_handler	rtc.c	/^ void rtc_handler(void) {$/;"	f
+rtc_init	rtc.c	/^ void rtc_init() {$/;"	f
+rtc_open	rtc.c	/^int32_t rtc_open(const uint8_t* filename)$/;"	f
+rtc_read	rtc.c	/^int32_t rtc_read(int32_t fd, uint8_t* buf, int32_t n_bytes, open_file* cur_file)$/;"	f
+rtc_write	rtc.c	/^int32_t rtc_write(int32_t fd, int32_t* frequency_ptr, int32_t n_bytes)$/;"	f
+rtc_write_wrapper	rtc_driver.S	/^rtc_write_wrapper:$/;"	l
+scancode	ps2_keyboard.c	/^char scancode[SC_TABLE_SIZE] = {$/;"	v
+screen_x	lib.c	/^static int screen_x;$/;"	v	file:
+screen_y	lib.c	/^static int screen_y = 3;$/;"	v	file:
+seg_desc	x86_desc.h	/^typedef struct seg_desc {$/;"	s
+seg_desc_t	x86_desc.h	/^} seg_desc_t;$/;"	t	typeref:struct:seg_desc
+seg_lim_15_00	x86_desc.h	/^			uint16_t seg_lim_15_00;$/;"	m	struct:seg_desc::__anon3::__anon4
+seg_lim_19_16	x86_desc.h	/^			uint32_t seg_lim_19_16 : 4;$/;"	m	struct:seg_desc::__anon3::__anon4
+seg_selector	x86_desc.h	/^		uint16_t seg_selector;$/;"	m	struct:idt_desc_t::__anon5
+send_eoi	i8259.c	/^send_eoi(uint32_t irq_num) {$/;"	f
+set_cr_reg	paging_asm.S	/^set_cr_reg:$/;"	l
+set_cursor_pos	lib.c	/^void set_cursor_pos() {$/;"	f
+set_handler	system_call.c	/^int32_t set_handler (int32_t signum, void* handler_address){$/;"	f
+set_idt_gate	idt_handle.c	/^void set_idt_gate(uint32_t num,$/;"	f
+set_page	paging.c	/^void set_page(table * curr_table, int i)$/;"	f
+set_table	paging.c	/^void set_table(directory * curr_dir, int i)$/;"	f
+shift_on	ps2_keyboard.c	/^static volatile unsigned int shift_on = OFF;$/;"	v	file:
+shift_screen	lib.c	/^void shift_screen(){$/;"	f
+shndx	multiboot.h	/^	uint32_t shndx;$/;"	m	struct:elf_section_header_table
+should_be_zero	paging.h	/^    int should_be_zero;$/;"	m	struct:__anon1
+should_be_zero	paging.h	/^    int should_be_zero;$/;"	m	struct:__anon2
+sigreturn	system_call.c	/^int32_t sigreturn (void){$/;"	f
+size	multiboot.h	/^	uint32_t size;$/;"	m	struct:elf_section_header_table
+size	multiboot.h	/^	uint32_t size;$/;"	m	struct:memory_map
+size	paging.h	/^    int size; \/\/1 for 4 mib pages$/;"	m	struct:__anon1
+size	x86_desc.h	/^		uint32_t size : 1;$/;"	m	struct:idt_desc_t::__anon5
+size	x86_desc.h	/^	uint16_t size;$/;"	m	struct:x86_desc
+slave_mask	i8259.c	/^uint8_t slave_mask; \/* IRQs 8-15 *\/$/;"	v
+ss	x86_desc.h	/^	uint16_t ss;$/;"	m	struct:tss_t
+ss0	x86_desc.h	/^	uint16_t ss0;$/;"	m	struct:tss_t
+ss0_pad	x86_desc.h	/^	uint16_t ss0_pad;$/;"	m	struct:tss_t
+ss1	x86_desc.h	/^	uint16_t ss1;$/;"	m	struct:tss_t
+ss1_pad	x86_desc.h	/^	uint16_t ss1_pad;$/;"	m	struct:tss_t
+ss2	x86_desc.h	/^	uint16_t ss2;$/;"	m	struct:tss_t
+ss2_pad	x86_desc.h	/^	uint16_t ss2_pad;$/;"	m	struct:tss_t
+ss_pad	x86_desc.h	/^	uint16_t ss_pad;$/;"	m	struct:tss_t
+start	boot.S	/^start:$/;"	l
+stdin_fn	system_call.c	/^uint32_t stdin_fn[4] = { (uint32_t)&terminal_read, (uint32_t)&terminal_write, (uint32_t)&terminal_open, (uint32_t)&terminal_close };$/;"	v
+stdout_fn	system_call.c	/^uint32_t stdout_fn[4] = { (uint32_t)&terminal_read, (uint32_t)&terminal_write, (uint32_t)&terminal_open, (uint32_t)&terminal_close };$/;"	v
+sti	lib.h	136;"	d
+strcpy	lib.c	/^strcpy(int8_t* dest, const int8_t* src)$/;"	f
+string	multiboot.h	/^	uint32_t string;$/;"	m	struct:module
+strlen	lib.c	/^strlen(const int8_t* s)$/;"	f
+strncmp	lib.c	/^strncmp(const int8_t* s1, const int8_t* s2, uint32_t n)$/;"	f
+strncpy	lib.c	/^strncpy(int8_t* dest, const int8_t* src, uint32_t n)$/;"	f
+strrev	lib.c	/^strrev(int8_t* s)$/;"	f
+sys	x86_desc.h	/^			uint32_t sys : 1;$/;"	m	struct:seg_desc::__anon3::__anon4
+syscall_code	excp_int_sys.S	/^syscall_code:$/;"	l
+system_call	system_call.c	/^void system_call(int sys_call_number){$/;"	f
+table	paging.h	/^    unsigned int table[KB] __attribute__((aligned(KB_4)));$/;"	m	struct:__anon1
+table	paging.h	/^} table;$/;"	t	typeref:struct:__anon2
+table_pointer	pcb.h	/^    uint32_t* table_pointer;$/;"	m	struct:_open_file
+terminal_close	lib.c	/^int terminal_close(void) {$/;"	f
+terminal_open	lib.c	/^int terminal_open(void) {$/;"	f
+terminal_read	lib.c	/^int terminal_read(char* in_buf, int length) {$/;"	f
+terminal_write	lib.c	/^int terminal_write(char* in_buf, int length) {$/;"	f
+test_interrupts	lib.c	/^test_interrupts(void)$/;"	f
+tss	x86_desc.S	/^tss:$/;"	l
+tss_bottom	x86_desc.S	/^tss_bottom:$/;"	l
+tss_desc_ptr	x86_desc.S	/^tss_desc_ptr:$/;"	l
+tss_size	x86_desc.S	/^tss_size:$/;"	l
+tss_t	x86_desc.h	/^typedef struct __attribute__((packed)) tss_t {$/;"	s
+tss_t	x86_desc.h	/^} tss_t;$/;"	t	typeref:struct:tss_t
+type	multiboot.h	/^	uint32_t type;$/;"	m	struct:memory_map
+type	x86_desc.h	/^			uint32_t type : 4;$/;"	m	struct:seg_desc::__anon3::__anon4
+uint16_t	types.h	/^typedef unsigned short uint16_t;$/;"	t
+uint32_t	types.h	/^typedef unsigned int uint32_t;$/;"	t
+uint8_t	types.h	/^typedef unsigned char uint8_t;$/;"	t
+user	paging.h	/^    int user; \/\/if 1 anyone can access$/;"	m	struct:__anon1
+user	paging.h	/^    int user; \/\/if 1 anyone can access$/;"	m	struct:__anon2
+val	x86_desc.h	/^		uint32_t val;$/;"	m	union:seg_desc::__anon3
+val	x86_desc.h	/^	uint32_t val;$/;"	m	union:idt_desc_t
+video_mem	lib.c	/^static char* video_mem = (char *)VIDEO;$/;"	v	file:
+vidmap	system_call.c	/^int32_t vidmap (uint8_t** screen_start){$/;"	f
+write	system_call.c	/^int32_t write (int32_t fd, const void* buf, int32_t nbytes){$/;"	f
+write_through	paging.h	/^    int write_through; \/\/1 for write through caching$/;"	m	struct:__anon1
+write_through	paging.h	/^    int write_through; \/\/1 for write through caching$/;"	m	struct:__anon2
+x86_desc	x86_desc.h	/^typedef struct x86_desc {$/;"	s
+x86_desc_t	x86_desc.h	/^} x86_desc_t;$/;"	t	typeref:struct:x86_desc

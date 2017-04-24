@@ -1,0 +1,92 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ALARM	ece391syscall.h	/^	ALARM,$/;"	e	enum:signums
+BIG_FD	ece391syserr.c	/^#define BIG_FD /;"	d	file:
+BIG_NUM	ece391syserr.c	/^#define BIG_NUM /;"	d	file:
+BUFMAX	ece391pingpong.c	/^#define BUFMAX /;"	d	file:
+BUFSIZE	ece391counter.c	/^#define BUFSIZE /;"	d	file:
+BUFSIZE	ece391grep.c	/^#define BUFSIZE /;"	d	file:
+BUFSIZE	ece391hello.c	/^#define BUFSIZE /;"	d	file:
+BUFSIZE	ece391shell.c	/^#define BUFSIZE /;"	d	file:
+BUFSIZE	ece391sigtest.c	/^#define BUFSIZE /;"	d	file:
+CC	Makefile	/^CC = gcc$/;"	m
+DIV_ZERO	ece391syscall.h	/^	DIV_ZERO = 0,$/;"	e	enum:signums
+DO_CALL	ece391emulate.c	/^#define DO_CALL(/;"	d	file:
+DO_CALL	ece391syscall.S	/^#define DO_CALL(name,number)   \\$/;"	d
+ECE391SUPPORT_H	ece391support.h	/^#define ECE391SUPPORT_H$/;"	d
+ECE391SYSCALL_H	ece391syscall.h	/^#define ECE391SYSCALL_H$/;"	d
+ECE391SYSNUM_H	ece391sysnum.h	/^#define ECE391SYSNUM_H$/;"	d
+ENDCHAR	ece391pingpong.c	/^#define ENDCHAR /;"	d	file:
+ENDING	ece391pingpong.c	/^#define ENDING /;"	d	file:
+INTERRUPT	ece391syscall.h	/^	INTERRUPT,$/;"	e	enum:signums
+LOOPMAX	ece391pingpong.c	/^#define LOOPMAX /;"	d	file:
+NEG_FD	ece391syserr.c	/^#define NEG_FD /;"	d	file:
+NEG_NUM	ece391syserr.c	/^#define NEG_NUM /;"	d	file:
+NUM_SIGNALS	ece391syscall.h	/^	NUM_SIGNALS$/;"	e	enum:signums
+SBUFSIZE	ece391grep.c	/^#define SBUFSIZE /;"	d	file:
+SBUFSIZE	ece391ls.c	/^#define SBUFSIZE /;"	d	file:
+SCREENWIDTH	ece391pingpong.c	/^#define SCREENWIDTH /;"	d	file:
+SEGFAULT	ece391syscall.h	/^	SEGFAULT,$/;"	e	enum:signums
+START	ece391pingpong.c	/^#define START /;"	d	file:
+STARTCHAR	ece391pingpong.c	/^#define STARTCHAR /;"	d	file:
+STARTLOOP	ece391pingpong.c	/^#define STARTLOOP /;"	d	file:
+SYS_CLOSE	ece391sysnum.h	/^#define SYS_CLOSE /;"	d
+SYS_EXECUTE	ece391sysnum.h	/^#define SYS_EXECUTE /;"	d
+SYS_GETARGS	ece391sysnum.h	/^#define SYS_GETARGS /;"	d
+SYS_HALT	ece391sysnum.h	/^#define SYS_HALT /;"	d
+SYS_OPEN	ece391sysnum.h	/^#define SYS_OPEN /;"	d
+SYS_READ	ece391sysnum.h	/^#define SYS_READ /;"	d
+SYS_SET_HANDLER	ece391sysnum.h	/^#define SYS_SET_HANDLER /;"	d
+SYS_SIGRETURN	ece391sysnum.h	/^#define SYS_SIGRETURN /;"	d
+SYS_VIDMAP	ece391sysnum.h	/^#define SYS_VIDMAP /;"	d
+SYS_WRITE	ece391sysnum.h	/^#define SYS_WRITE /;"	d
+USER1	ece391syscall.h	/^	USER1,$/;"	e	enum:signums
+_start	ece391syscall.S	/^_start:$/;"	l
+alarm_sighandler	ece391sigtest.c	/^alarm_sighandler (int signum)$/;"	f
+badbuf	ece391sigtest.c	/^static volatile uint8_t* badbuf = 0;$/;"	v	file:
+call_sys	ece391syserr.c	/^int call_sys(int num)$/;"	f
+charbuf	ece391sigtest.c	/^static uint8_t charbuf;$/;"	v	file:
+dir	ece391emulate.c	/^static DIR* dir = NULL;$/;"	v	file:
+dir_fd	ece391emulate.c	/^static int32_t dir_fd = -1;$/;"	v	file:
+do_one_file	ece391grep.c	/^do_one_file (const char* s, const char* fname) $/;"	f
+ece391_close	ece391emulate.c	/^ece391_close (int32_t fd)$/;"	f
+ece391_execute	ece391emulate.c	/^ece391_execute (const uint8_t* command)$/;"	f
+ece391_fdputs	ece391support.c	/^void ece391_fdputs(int32_t fd, const uint8_t* s)$/;"	f
+ece391_getargs	ece391emulate.c	/^ece391_getargs (uint8_t* buf, int32_t nbytes)$/;"	f
+ece391_itoa	ece391support.c	/^uint8_t* ece391_itoa(uint32_t value, uint8_t* buf, int32_t radix)$/;"	f
+ece391_open	ece391emulate.c	/^ece391_open (const uint8_t* filename)$/;"	f
+ece391_read	ece391emulate.c	/^ece391_read (int32_t fd, void* buf, int32_t nbytes)$/;"	f
+ece391_strcmp	ece391support.c	/^int32_t ece391_strcmp(const uint8_t* s1, const uint8_t* s2)$/;"	f
+ece391_strcpy	ece391support.c	/^void ece391_strcpy(uint8_t* dst, const uint8_t* src)$/;"	f
+ece391_strlen	ece391support.c	/^uint32_t ece391_strlen(const uint8_t* s)$/;"	f
+ece391_strncmp	ece391support.c	/^int32_t ece391_strncmp(const uint8_t* s1, const uint8_t* s2, uint32_t n)$/;"	f
+ece391_strrev	ece391support.c	/^uint8_t* ece391_strrev(uint8_t* s)$/;"	f
+ece391_vidmap	ece391emulate.c	/^ece391_vidmap (uint8_t** screen_start)$/;"	f
+ece391_write	ece391emulate.c	/^ece391_write (int32_t fd, const void* buf, int32_t nbytes)$/;"	f
+err_big_fd	ece391syserr.c	/^int err_big_fd(void) {$/;"	f
+err_neg_fd	ece391syserr.c	/^int err_neg_fd(void) {$/;"	f
+err_open	ece391syserr.c	/^int err_open(void) {$/;"	f
+err_open_lots	ece391syserr.c	/^int err_open_lots(void) {$/;"	f
+err_stdin_out	ece391syserr.c	/^ int err_stdin_out(void) {$/;"	f
+err_syscall_num	ece391syserr.c	/^ int err_syscall_num(void)$/;"	f
+err_unopened	ece391syserr.c	/^int err_unopened(void) {$/;"	f
+err_vidmap	ece391syserr.c	/^int err_vidmap(void) {$/;"	f
+fake_function	ece391emulate.c	/^void fake_function () {$/;"	f
+main	ece391cat.c	/^int main ()$/;"	f
+main	ece391counter.c	/^int main ()$/;"	f
+main	ece391grep.c	/^int main ()$/;"	f
+main	ece391hello.c	/^int main ()$/;"	f
+main	ece391ls.c	/^int main ()$/;"	f
+main	ece391pingpong.c	/^int main ()$/;"	f
+main	ece391shell.c	/^int main ()$/;"	f
+main	ece391sigtest.c	/^int main ()$/;"	f
+main	ece391syserr.c	/^int main ()$/;"	f
+main	ece391testprint.c	/^int main ()$/;"	f
+name	ece391syscall.S	/^name:   PUSHL	%EBX          ;\\$/;"	l
+segfault_sighandler	ece391sigtest.c	/^segfault_sighandler (int signum)$/;"	f
+signums	ece391syscall.h	/^enum signums {$/;"	g
+start_esp	ece391emulate.c	/^static uint32_t start_esp;$/;"	v	file:

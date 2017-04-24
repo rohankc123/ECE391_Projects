@@ -1,0 +1,8 @@
+*.swp
+*.c.swp
+*.h.swp
+*.img
+mp3.img
+bootimg
+*.o
+*.dep

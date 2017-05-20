@@ -5,6 +5,8 @@
 
 #include "ps2_keyboard.h"
 #include "rtc.h"
+#include "scheduler.h"
+
 
 extern void sys_test(int arg);
 extern void exception0_code();

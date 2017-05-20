@@ -6,6 +6,7 @@
 #include "pcb.h"
 #include "x86_desc.h"
 #include "ps2_keyboard.h"
+#include "pit_init.h"
 
 #define READ 0
 #define WRITE 1
@@ -14,12 +15,11 @@
 
 #define TRUE 1
 #define FALSE 0
-#define MB 0x0100000
 #define VIDEO 0xB8000
 #define PID_SIZE 32
-#define PROGRAM_ENTRY 32
+
 #define KERNEL_OFFSET 8
-#define PROGRAM_SIZE 4
+
 #define FD_SIZE 7
 #define FD_START 2
 #define RTC_TYPE 0
@@ -31,7 +31,6 @@
 #define STDIN_FD 0
 #define STDOUT_FD 1
 
-#define PAGE_OFF 4
 #define DRIVER 4
 #define NUM_DRIVERS 5
 
@@ -51,13 +50,10 @@
 #define ENTRY_IDX 6
 
 #define PROGRAM_VIRT_ADDRESS 0x08048000
-#define PCB_MASK 0xFFFFE000
 #define SCREEN_SHIFT_1 22
 #define SCREEN_SHIFT_2 12
 
-
 uint32_t pid_openings = 0x3F;
-
 
 /*
  * BACKGROUND INFO
@@ -75,6 +71,7 @@ uint32_t pid_openings = 0x3F;
 int32_t inval_write (int32_t fd, const void* buf, int32_t n_bytes, void* cur_file){
 	return -1;
 }
+
 int32_t inval_read (int32_t fd, void* buf, int32_t n_bytes, void* cur_file){
 	return -1;
 }
@@ -86,67 +83,67 @@ device stdin_fn;
 device stdout_fn;
 device ftype_drivers[NUM_DRIVERS];
 
-
 void system_call(int sys_call_number){
 	printf("SYSTEM CALL NUMBER: %d", sys_call_number);
 }
 
-void init_callbacks() {
-    // Real Time Clock functions:
-    rtc_fn.read           = &rtc_read;
-    rtc_fn.write          = &rtc_write;
-    rtc_fn.open           = &rtc_open;
-    rtc_fn.close          = &rtc_close;
+void init_callbacks(){
+	// Real Time Clock functions:
+	rtc_fn.read           = &rtc_read;
+	rtc_fn.write          = &rtc_write;
+	rtc_fn.open           = &rtc_open;
+	rtc_fn.close          = &rtc_close;
 
-    // Directory functions:
-    dir_fn.read           = &dir_read;
-    dir_fn.write          = &dir_write;
-    dir_fn.open           = &dir_open;
-    dir_fn.close          = &dir_close;
+	// Directory functions:
+	dir_fn.read           = &dir_read;
+	dir_fn.write          = &dir_write;
+	dir_fn.open           = &dir_open;
+	dir_fn.close          = &dir_close;
 
-    // File functions:
-    file_fn.read          = &file_read;
-    file_fn.write         = &file_write;
-    file_fn.open          = &file_open;
-    file_fn.close         = &file_close;
+	// File functions:
+	file_fn.read          = &file_read;
+	file_fn.write         = &file_write;
+	file_fn.open          = &file_open;
+	file_fn.close         = &file_close;
 
-    // Standard input output:
-    stdin_fn.read         = &terminal_read;
-    stdin_fn.write        = &inval_write;
-    stdin_fn.open         = &terminal_open;
-    stdin_fn.close        = &terminal_close;
-    stdout_fn.read        = &inval_read;
-    stdout_fn.write       = &terminal_write;
-    stdout_fn.open        = &terminal_open;
-    stdout_fn.close       = &terminal_close;
+	// Standard input output:
+	stdin_fn.read         = &terminal_read;
+	stdin_fn.write        = &inval_write;
+	stdin_fn.open         = &terminal_open;
+	stdin_fn.close        = &terminal_close;
+	stdout_fn.read        = &inval_read;
+	stdout_fn.write       = &terminal_write;
+	stdout_fn.open        = &terminal_open;
+	stdout_fn.close       = &terminal_close;
 
-    ftype_drivers[RTC_TYPE]      = rtc_fn;
-    ftype_drivers[DIR_TYPE]      = dir_fn;
-    ftype_drivers[FILE_TYPE]      = file_fn;
-    ftype_drivers[STDIN_TYPE]      = stdin_fn;
-    ftype_drivers[STDOUT_TYPE]      = stdout_fn;
+	ftype_drivers[RTC_TYPE]      = rtc_fn;
+	ftype_drivers[DIR_TYPE]      = dir_fn;
+	ftype_drivers[FILE_TYPE]     = file_fn;
+	ftype_drivers[STDIN_TYPE]    = stdin_fn;
+	ftype_drivers[STDOUT_TYPE]   = stdout_fn;
 }
 
 
 void set_fr(uint32_t _ebp, uint32_t _esp);
+void set_term_fr(uint32_t _ebp, uint32_t _esp);
 void fetch_fr(uint32_t _ebp, uint32_t _esp);
 
 //-----------------------------------------------------------------------------
-// Syscall HALT, #1
-//     This system call is called by a user program and cleans up the
+// REAL_HALT
+//     This system call is called when a program is terminating and cleans up the
 //     stack and PCB in lieu of the terminated program.
 //
 //-----------------------------------------------------------------------------
-int32_t halt (uint8_t status){
-	int i,pid;
+int32_t real_halt(int32_t status)
+{
+	cli();
+	int i, pid;
 	PCB* child_pcb = get_pcb();
 	PCB* parent_pcb = child_pcb->parent_pcb;
-
 
 	set_buf_end(0); //Sets the terminal buffer to empty (start=0)
 
 	// Close all open files
-
 	for (i = FD_START; i < FD_NUM; ++i){
 		close(i);
 	}
@@ -157,10 +154,11 @@ int32_t halt (uint8_t status){
 
 	// Re-start shell if the parent is NULL:
 	if(parent_pcb == NULL){
-		clear();
-		root_shell();
+		term_clear(child_pcb->term_parent);
+		root_shell(child_pcb->term_parent);
 		return 0;
 	}
+	parent_pcb->child_pcb = NULL;
 
 	// Set up a single 4 MB page directory entry that maps virtual address
 	// 0x08000000 (128 MB) to the right physical memory address (either 8 MB or 12 MB)
@@ -181,47 +179,62 @@ int32_t halt (uint8_t status){
 
 	tss.ss0 = KERNEL_DS;
 	tss.esp0 = KERNEL_OFFSET*MB-(parent_pcb->pid*KERNEL_OFFSET*KB)-PAGE_OFF;
-	sys_halt((int32_t)status);
+	sys_halt(status);
 
 	return -1;
 }
 
 //-----------------------------------------------------------------------------
-// Syscall EXECUTE
-//     This system call is called when a user wishes to execute a program
+// Syscall HALT
+//     wrapper for real_halt function only gets the bottom 8 bits of our argument
+//     for security purposes
+//
+//-----------------------------------------------------------------------------
+
+int32_t halt (uint8_t status){
+	real_halt((int32_t)status);
+	return -1;
+}
+
+//-----------------------------------------------------------------------------
+// root shell
+//     This system call is called when a user wishes to execute a "root" shell
+//     which has no parent pointers
 //     It copies the program into memory, sets up a stack and makes a new
 //     PCB for the program.
 //
 //-----------------------------------------------------------------------------
-int32_t root_shell(void){
+int32_t root_shell(int terminal){
+	cli();
 	uint8_t command[] = "shell";
 	dentry_t dentry;
 	dentry_t* temp = &dentry;
 	uint8_t* fname;
 	int i, pid_num;
-
 	for(i = 0; i < PID_SIZE; i++){
 		/* check if pid i is open */
 		if((pid_openings >> i) & 1){
 			break;
 		}
 	}
-	/* If there are no PID openings */
-	if(i == PID_SIZE)
-		return -1;
-	pid_num = i;
-	//8 kilobyte mask
-	PCB* child_pcb = (PCB*)((KERNEL_OFFSET*MB-(KERNEL_OFFSET*KB*i)-PAGE_OFF) & PCB_MASK);
 
+	/* If there are no PID openings */
+	if(i == PID_SIZE) return -1;
+	pid_num = i;
+	pid_num = terminal;
+	i = terminal;
+
+	//8 kilobyte mask
+	PCB* child_pcb = (PCB*)((KERNEL_OFFSET*MB-(KERNEL_OFFSET*KB*terminal)-PAGE_OFF) & PCB_MASK);
 	child_pcb->pid = i;
 	uint32_t entry_esp;
 
 	fname = command;
 
-for (i = 0; i < KBD_BUF_SIZE-1; i++ )
-	{
+	for (i = 0; i < KBD_BUF_SIZE-1; i++ ){
 		child_pcb->args_buf[i] = 0;
 	}
+
 	//fill dentry structure
 	if(read_dentry_by_name(fname, temp) == -1){
 		return -1;
@@ -231,23 +244,25 @@ for (i = 0; i < KBD_BUF_SIZE-1; i++ )
 	if(read_data(temp->inode, 0, buf, READ_DATA_BUF) == -1){
 		return -1;
 	}
+
 	//if not exe, fail
 	/* if magic number is not present, the execute system call should fail */
 	/* magic number is first 4 bytes of the file- */
 	/* 0: 0x7f, 1: 0x45, 2: 0x4c, 3: 0x46 */
-
-
 	if(!(buf[CHECK_0] == MAGIC_CHAR_0 && buf[CHECK_1] == MAGIC_CHAR_1 && buf[CHECK_2] == MAGIC_CHAR_2 && buf[CHECK_3] == MAGIC_CHAR_3)){
 		return -1;
 	}
 
 	/* Set the PCB values */
+	child_pcb->next = (PCB*)((KERNEL_OFFSET*MB-(KERNEL_OFFSET*KB*((terminal+1)%CHECK_3))-PAGE_OFF) & PCB_MASK); //get setup the next address 3 is max num term
 	child_pcb->parent_pcb = NULL ;//parent_pcb;
 	child_pcb->child_pcb = NULL;
 	(child_pcb->open_files[STDIN_FD]).table_pointer = ftype_drivers[STDIN_TYPE];
 	(child_pcb->open_files[STDOUT_FD]).table_pointer = ftype_drivers[STDOUT_TYPE];
 	(child_pcb->open_files[STDIN_FD]).flags = 1;
 	(child_pcb->open_files[STDOUT_FD]).flags = 1;
+
+	child_pcb->term_parent = terminal;
 
 	pid_openings &= ~(0x0001 << pid_num);
 
@@ -286,7 +301,6 @@ for (i = 0; i < KBD_BUF_SIZE-1; i++ )
 	//returned is that given by the program's call to halt
 
 	return 0;
-
 }
 
 //-----------------------------------------------------------------------------
@@ -294,28 +308,32 @@ for (i = 0; i < KBD_BUF_SIZE-1; i++ )
 //     This system call is called when a program wishes to write data to
 //     the file system.
 //
-//     Input:        command - file name
-//     Return: 			 halt number
+//     Input:        	command - file name
+//     Return:		halt number
 //
 //-----------------------------------------------------------------------------
 int32_t execute (const uint8_t* command){
+	if(!command) return -1;
+	cli();
 	dentry_t dentry;
 	dentry_t* temp = &dentry;
 	uint8_t fname[NAME_LENGTH];
+	PCB* parent_pcb = get_pcb();
 	int i;
 	int j;
 	int pid_num;
 	int leading_spaces = FALSE;
-
-	for(i = 0; i < PID_SIZE; i++){
+	//start at 3 bc previous numbers are reserved for terminals
+	for(i = 3; i < PID_SIZE; i++){
 		/* check if pid i is open */
 		if((pid_openings >> i) & 1){
 			break;
 		}
 	}
 	/* If there are no PID openings */
-	if(i == PID_SIZE)
+	if(i == PID_SIZE){
 		return -1;
+	}
 	pid_num = i;
 
 	// top 8 kb
@@ -329,11 +347,10 @@ int32_t execute (const uint8_t* command){
 		if(command[i] != ' ' ){
 			fname[i] = command[i];
 		}
-		else{
-			break;
-		}
+		else break;
 		if(command[i] == '\0') break;
 	}
+	fname[i] = '\0';
 
 	/* The -1 is because KBD_BUF_SIZE includes space for a new line carriage which we don't want */
 	for(j = i; j < KBD_BUF_SIZE+i-1; j++){
@@ -344,10 +361,11 @@ int32_t execute (const uint8_t* command){
 		}
 		leading_spaces = TRUE;
 		child_pcb->args_buf[j-i] = command[j];
-		if(command[j] == '\0')
+		if(command[j] == '\0'){
 			break;
+		}
 	}
-
+		child_pcb->args_buf[j-i] = '\0';
 	//fill dentry structure
 	if(read_dentry_by_name(fname, temp) == -1){
 			return -1;
@@ -367,6 +385,8 @@ int32_t execute (const uint8_t* command){
  	}
 
 	/* Set the PCB values */
+	child_pcb->parent_pcb = parent_pcb;
+	child_pcb->next = child_pcb->parent_pcb->next;
 	child_pcb->child_pcb = NULL;
 	(child_pcb->open_files[STDIN_FD]).table_pointer = ftype_drivers[STDIN_TYPE];
 	(child_pcb->open_files[STDOUT_FD]).table_pointer = ftype_drivers[STDOUT_TYPE];
@@ -374,8 +394,9 @@ int32_t execute (const uint8_t* command){
 	(child_pcb->open_files[STDOUT_FD]).flags = 1;
 
 
+	child_pcb->term_parent = child_pcb->parent_pcb->term_parent;
+
 	pid_openings &= ~(0x0001 << pid_num);
-	PCB* parent_pcb = get_pcb();
 	parent_pcb->child_pcb = child_pcb;
 	child_pcb->parent_pcb = parent_pcb;
 
@@ -405,10 +426,9 @@ int32_t execute (const uint8_t* command){
 	tss.ss0 = KERNEL_DS;
 	/* Kernel stack goes at bottom of kernel memory offset up by 8KB * pid */
 	tss.esp0 = KERNEL_OFFSET*MB-(child_pcb->pid*KERNEL_OFFSET*KB)-PAGE_OFF;
-	//tss.esp0 = 0x7FFFFC;
 	//jump to entry point of program to begin execution should be bytes 24-27
 	entry_esp = ((uint32_t*)buf)[ENTRY_IDX];
-	uint8_t result;
+	uint32_t result;
 	result = entrypoint(entry_esp);
 
 	//return 256 if program dies by exception
@@ -430,7 +450,10 @@ int32_t execute (const uint8_t* command){
 //
 //-----------------------------------------------------------------------------
 int32_t read (int32_t fd, void* buf, int32_t nbytes){
+	if(!buf) return -1;
 	/* Check for invalid index */
+	sti();
+
 	if (fd < 0 || fd > FD_SIZE)
 	    return -1;
 
@@ -455,6 +478,7 @@ int32_t read (int32_t fd, void* buf, int32_t nbytes){
 //
 //-----------------------------------------------------------------------------
 int32_t write (int32_t fd, const void* buf, int32_t nbytes){
+	if(!buf) return -1;
 	/* Check for invalid index */
 	if (fd < 0 || fd > FD_SIZE)
 		return -1;
@@ -478,6 +502,7 @@ int32_t write (int32_t fd, const void* buf, int32_t nbytes){
 //
 //-----------------------------------------------------------------------------
 int32_t open (const uint8_t* filename){
+	if(!filename) return -1;
 	dentry_t cur_dentry; //dentry associated with fd
 	const uint8_t* temp_name = filename;
 	int i;
@@ -487,9 +512,7 @@ int32_t open (const uint8_t* filename){
 	}
 
 	PCB* cur_pcb = get_pcb();
-	//open_file open_files[8];
 	for(i = FD_START; i < (FD_SIZE+1); i++){
-		/* TODO: bitmask flags option */
 		if((cur_pcb->open_files[i]).flags == 0){
 			break;
 		}
@@ -500,7 +523,6 @@ int32_t open (const uint8_t* filename){
 		return -1;
 	}
 
-	/* TODO maybe... : initialize all open_files.flags to 0 */
 	open_file* newfile = &(cur_pcb->open_files[i]);
 
 	newfile->table_pointer =  ftype_drivers[cur_dentry.ftype];
@@ -521,13 +543,11 @@ int32_t open (const uint8_t* filename){
 //
 //-----------------------------------------------------------------------------
 int32_t close (int32_t fd){
-	if(fd < FD_START || fd > FD_SIZE)
-		return -1;
+	if(fd < FD_START || fd > FD_SIZE) return -1;
 
 	PCB* cur_pcb = get_pcb();
 
-	if((cur_pcb->open_files[fd]).flags == 0)
-		return -1;
+	if((cur_pcb->open_files[fd]).flags == 0) return -1;
 	(cur_pcb->open_files[fd]).flags = 0;
 	(cur_pcb->open_files[fd]).filepos = 0;
 	return 0;
@@ -544,6 +564,7 @@ int32_t close (int32_t fd){
 //
 //-----------------------------------------------------------------------------
 int32_t getargs (uint8_t* buf, int32_t nbytes){
+	if(!buf) return -1;
 	int i;
 	int full_arg_buf = FALSE;
 
@@ -556,9 +577,8 @@ int32_t getargs (uint8_t* buf, int32_t nbytes){
 			break;
 		}
 	}
-
-	if(full_arg_buf)
-		return 0;
+	if(i == 0) return -1;
+	if(full_arg_buf) return 0;
 
 	/* if buf isn't big enough for the whole argument buffer */
 	return -1;
@@ -576,38 +596,37 @@ int32_t getargs (uint8_t* buf, int32_t nbytes){
 //
 //-----------------------------------------------------------------------------
 int32_t vidmap (uint8_t** screen_start){
+	if(!screen_start) return -1;
 
 	/* Test for invalid memory address */
-	if((uint32_t)screen_start == (uint32_t)0x0 || (uint32_t)screen_start < (uint32_t)KERNEL_OFFSET	*MB)
-		return -1;
+	if((uint32_t)screen_start == (uint32_t)0x0 || (uint32_t)screen_start < (uint32_t)KERNEL_OFFSET	*MB) return -1;
 
-    //unsigned int index = next_vidmap();
-    PCB* process = get_pcb() ;
+	//unsigned int index = next_vidmap();
+	PCB* process = get_pcb();
 
-    //video memory
-    video_page_table.page[process->pid] = VIDEO;
-    video_page_table.present = 1;
-    video_page_table.read_write = 1; //1 for read/write
-    video_page_table.user = 1; //if 1 anyone can access
-    video_page_table.write_through = 0; //1 for write through caching
-    video_page_table.cache_dis = 0; //1 if you don't want caching
-    video_page_table.accessed =0; //1 if it has been read/written
-    video_page_table.dirty = 0; //1 if it has been written to
-    video_page_table.should_be_zero = 0;
-    video_page_table.global = 1; //if set prevents tlb from updating the address if cr3 is reset
-    set_page(&video_page_table, process->pid);
+	//video memory
+	video_page_table.page[process->pid] = (uint32_t)video_copiez[process->term_parent];
+	video_page_table.present = 1;
+	video_page_table.read_write = 1; //1 for read/write
+	video_page_table.user = 1; //if 1 anyone can access
+	video_page_table.write_through = 0; //1 for write through caching
+	video_page_table.cache_dis = 0; //1 if you don't want caching
+	video_page_table.accessed = 0; //1 if it has been read/written
+	video_page_table.dirty = 0; //1 if it has been written to
+	video_page_table.should_be_zero = 0;
+	video_page_table.global = 1; //if set prevents tlb from updating the address if cr3 is reset
+	set_page(&video_page_table, process->pid);
 
-    *screen_start = (uint8_t*)(0x00000000 | (VID_MEM_PAGE << SCREEN_SHIFT_1) | (process->pid << SCREEN_SHIFT_2));
+	*screen_start = (uint8_t*)(0x00000000 | (VID_MEM_PAGE << SCREEN_SHIFT_1) | (process->pid << SCREEN_SHIFT_2));
 
-    return 0;
+	return 0;
 }
 
 //-----------------------------------------------------------------------------
 // Syscall SET_HANDLER, #9
-//     *** TODO ***
 //
-//     Input:             signum -
-//               handler_address -
+//     Input:             signum
+//               handler_address
 //     Output:                 0 - success
 //                            -1 - error
 //
@@ -618,7 +637,6 @@ int32_t set_handler (int32_t signum, void* handler_address){
 
 //-----------------------------------------------------------------------------
 // Syscall SIGRETURN, #10
-//     *** TODO ***
 //
 //     Input:
 //     Output:        0 - success

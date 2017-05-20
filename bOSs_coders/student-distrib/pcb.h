@@ -22,7 +22,7 @@ typedef struct _open_file {
     uint32_t inode;
     uint32_t filepos;
     uint32_t flags;
-    uint32_t pid; //which task are we in?
+    uint32_t pid; //mask are we in?
     //might need to add child or w/e
 } open_file;
 
@@ -30,8 +30,13 @@ typedef struct _PCB
 {
   uint32_t esp_reg;
   uint32_t ebp_reg;
+
   struct _PCB* parent_pcb;
   struct _PCB* child_pcb;
+  struct _PCB* next;
+  uint32_t term_esp_reg;
+  uint32_t term_ebp_reg;
+  uint32_t term_parent;
   uint32_t pid;
   open_file open_files[FD_NUM];
   uint8_t args_buf[KBD_BUF_SIZE-1];
@@ -40,6 +45,4 @@ typedef struct _PCB
 
 
 extern PCB* get_pcb();
-
 #endif
-

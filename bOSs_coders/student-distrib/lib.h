@@ -9,8 +9,15 @@
 #include "ps2_keyboard.h"
 #include "pcb.h"
 
+#define VIDEO_1   0x2000000
+#define VIDEO_2   0x2001000
+#define VIDEO_3   0x2002000
+#define OFF   	  0
+#define ON        1
+
 int32_t printf(int8_t *format, ...);
 void putc(uint8_t c);
+void term_putc(int i, uint8_t c);
 void add_kbd_buf(int8_t* buf, char c, int* buf_end);
 void print_kbd_buf(int8_t* buf);
 int32_t puts(int8_t *s);
@@ -18,6 +25,9 @@ int8_t *itoa(uint32_t value, int8_t* buf, int32_t radix);
 int8_t *strrev(int8_t* s);
 uint32_t strlen(const int8_t* s);
 void clear(void);
+void term_clear(int i);
+void swap_vmem(int from, int to);
+void disp_vmem(int to);
 
 void* memset(void* s, int32_t c, uint32_t n);
 void* memset_word(void* s, int32_t c, uint32_t n);
@@ -41,6 +51,8 @@ int32_t terminal_write(int32_t fd, const void* buf, int32_t length, void* cur_fi
 int32_t terminal_close(void);
 int32_t terminal_open(const uint8_t* filename);
 
+// These store copies of the switched out terminals:
+char* video_copiez[TOTAL_TERMS];
 
 /* Port read functions */
 /* Inb reads a byte and returns its value as a zero-extended 32-bit

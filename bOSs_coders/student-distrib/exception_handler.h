@@ -1,6 +1,10 @@
 #ifndef EXCEPTION_HANDLER_H
 #define EXCEPTION_HANDLER_H
 
+#include "lib.h"
+#include "exception_handler.h"
+#include "system_call.h"
+
 extern void exception_0();
 extern void exception_1();
 extern void exception_2();

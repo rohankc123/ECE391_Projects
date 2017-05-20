@@ -5,7 +5,6 @@
 #define KB 1024
 #define KB_4 4096
 #define KERNEL_START 0x400000
-#define MB 0x100000
 #define BUFFER_SIZE 128
 
 #define NO         0x0
@@ -13,11 +12,14 @@
 #define PRESENT    0x0001
 #define PRIV       0x0004
 
-#define VID_MEM_PAGE 1023
-
+#define OFF_DISPLAY_IDX 8
 directory page_directory;
 table page_table;
+
 table video_page_table;
+
+table off_display_table;
+
 
 /*
  * paging_init
@@ -43,8 +45,30 @@ void paging_init()
         {
                 video_page_table.page[i] = 0x000000000;
         }
-
+  for(i = 0; i < KB; ++i)
+        {
+                off_display_table.page[i] = 0x000000000;
+        }
         //video memory
+        off_display_table.page[0] = VIDEO_1;
+        off_display_table.page[1] = VIDEO_2;
+        off_display_table.page[2] = VIDEO_3;
+
+        off_display_table.present = 1;
+        off_display_table.read_write = 1; //1 for read/write
+        off_display_table.user = 1; //if 1 anyone can access
+        off_display_table.write_through = 0; //1 for write through caching
+        off_display_table.cache_dis = 0; //1 if you don't want caching
+        off_display_table.accessed =0; //1 if it has been read/written
+        off_display_table.dirty = 0; //1 if it has been written to
+        off_display_table.should_be_zero = 0;
+        off_display_table.global = 1; //if set prevents tlb from updating the address if cr3 is reset
+        set_page(&off_display_table, 0); //indices for terminals 0, 1, 2
+        set_page(&off_display_table, 1);
+        set_page(&off_display_table, 2);
+
+
+
         page_table.page[VIDEO/KB_4] = VIDEO;
         page_table.present = 1;
         page_table.read_write = 0; //1 for read/write
@@ -75,8 +99,9 @@ void paging_init()
         page_directory.global = 1; //ignored
         set_table(&page_directory, 0);
 
-        //virtual video memory
+        //virtual video memory and off display
         page_directory.table[VID_MEM_PAGE] = (unsigned int) (video_page_table.page);
+        page_directory.table[OFF_DISPLAY_IDX] = (unsigned int) (off_display_table.page);
         page_directory.present = 1;  // 1 for present
         page_directory.read_write = 1; //1 for read/write
         page_directory.user = 1; //if 1 anyone can access
@@ -87,6 +112,7 @@ void paging_init()
         page_directory.size = 0; //1 for 4 mib pages
         page_directory.global = 1; //ignored
         set_table(&page_directory, VID_MEM_PAGE);
+        set_table(&page_directory, OFF_DISPLAY_IDX);
 
         //map kernel code
         page_directory.table[1] = KERNEL_START;

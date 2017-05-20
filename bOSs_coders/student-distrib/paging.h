@@ -4,8 +4,10 @@
 #define KB 1024
 #define KB_4 4096
 #define KERNAL_START 0x400000
-
-
+#define VIDEO_1   0x2000000
+#define VIDEO_2   0x2001000
+#define VIDEO_3   0x2002000
+#define VID_MEM_PAGE 1023
 
 typedef struct _directory
 {
@@ -44,5 +46,6 @@ extern unsigned int next_vidmap(void);
 extern directory page_directory;
 extern table page_table;
 extern table video_page_table;
+extern table off_display_table;
 
 #endif

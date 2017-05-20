@@ -64,6 +64,7 @@ uint32_t idt_array[IDT_SIZE] = {
  */
 int init_idt(){
 	int i;
+	//size of idt array
 	idt_array[0x80] = (uint32_t)syscall_code;
 
 	//IDT_SIZE = 256
@@ -80,6 +81,10 @@ int init_idt(){
 			set_idt_gate(i, idt_array[i], KERNEL_CS, ADDR_32, SUPER_PRIV, 0);
 		}
 
+		// pit
+		if(i == 32){
+			set_idt_gate(i, idt_array[i], KERNEL_CS, ADDR_32, SUPER_PRIV, 1);
+		}
 		//keyboard interrupt (0x21 IRQ1)
 		if(i == 33){
 			set_idt_gate(i, idt_array[i], KERNEL_CS, ADDR_32, SUPER_PRIV, 1);

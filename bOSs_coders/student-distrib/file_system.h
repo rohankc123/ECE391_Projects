@@ -6,7 +6,7 @@
 extern uint32_t file_system_addr;
 
 typedef struct _dentry_t{
-	uint8_t fname[32];
+	uint8_t fname[NAME_LENGTH];
 	uint8_t ftype;
 	uint32_t inode;
 	uint32_t fsize;
@@ -34,5 +34,5 @@ extern int32_t dir_write(int32_t fd, const void* _buf, int32_t n_bytes, void* _c
 
 extern int32_t dir_close(void);
 
-extern uint8_t entrypoint(uint32_t entry);
+extern int32_t entrypoint(uint32_t entry);
 #endif

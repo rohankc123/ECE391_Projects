@@ -16,6 +16,8 @@
 #define BYTE_3 3
 #define BYTE_2 2
 #define BYTE_1 1
+
+#define NEXT_ADDR 4
 uint32_t file_system_addr;
 
 /*
@@ -78,7 +80,7 @@ int32_t read_dentry_by_name(uint8_t* fname, dentry_t* dentry){
 			dentry->ftype = *curr_address;
 
 			//uint32_t inode
-			curr_address += 4;
+			curr_address += NEXT_ADDR;
 
 
 			dentry->inode = (*(curr_address + BYTE_3) << INODE_SHIFT_3) + (*(curr_address + BYTE_2) << INODE_SHIFT_2) + (*(curr_address + BYTE_1) << INODE_SHIFT_1) + (*curr_address);
@@ -133,7 +135,7 @@ int32_t read_dentry_by_index(uint32_t index, dentry_t* dentry){
 	dentry->ftype = *curr_address;
 
 	//uint32_t inode
-	curr_address += 4;
+	curr_address += NEXT_ADDR;
 
 
 
@@ -232,7 +234,6 @@ int32_t read_data(uint32_t inode, uint32_t offset, uint8_t* buf, uint32_t length
 
 			break;
 		}
-//printf("\n length: %d \n", length);
 		length--;
 		current_byte++;
 		buf++;
@@ -298,9 +299,9 @@ int32_t dir_read(int32_t fd, void* _buf, int32_t n_bytes, void* _cur_file){
 	}
 
 	//fname size
-	memcpy(buf, new_entry_ptr->fname, 32);
+	memcpy(buf, new_entry_ptr->fname, 32); //length of name
 
-	return i; //?????? not sure
+	return i;
 }
 
 int32_t dir_write(int32_t fd, const void* _buf, int32_t n_bytes, void* _cur_file){

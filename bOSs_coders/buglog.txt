@@ -1,0 +1,125 @@
+/*
+ *	Bugs shown are major bugs. Minor bugs or bugs fixed in a short amount of time weren't included.
+ */
+______________Checkpoint 1______________
+BUG: 	gdt not initialized - when entering os in grub, os faults and returns to grub
+SOLN:	gdt_desc created to place gdt into GDTR
+STABLE:	060cee34
+CONTR:	everyone
+
+BUG:	IDT not generating interrupts - Errors dealing calling into IDT. Probably an issue with the jump table and set_idt_entry function
+SOLN:	Changed IDT to a jump table. Fixed syntax in set_idt_entry. Defined assembly code for each exception in exceptions.S. Added code for exceptions. Tested div0 in kernel.c (previous commit, not stable commit)
+STABLE:	62fb0701
+CONTR:	Max, Zach
+
+BUG:	Lowercase keys not appearing on screen.
+SOLN:	PIC was not unmasking interrupts. Keyboard wasn't initialized in IDT. Got scan codes as integers and used putc(c); to print to screen.
+STABLE:	99540ede
+CONTR:	Andy
+
+BUG: 	Paging causes triple faults.
+SOLN:	fixed paging_init() to reference the correct addresses and fixed the bitmasks. Changed asm code to c code
+STABLE:	82ce2470
+CONTR:	Paul
+
+BUG:	RTC not executing interrupts correctly
+SOLN:	Added initialization function. Connected to now working IDT
+STABLE:	62fb0701
+CONTR:	Andy, Paul
+
+______________Checkpoint 2______________
+
+BUG:	Cursor not showing up.
+SOLN:	Fixed address we are writing to
+STABLE:	36d1688f
+CONTR: 	Andy
+
+BUG:	Cursor not appearing in correct location.
+SOLN:	Set up position in video memory. Fixed next bug of cursor not moving back on backspace. Additionally, cleared cursor to 0 on an enter or the top left on a CTR-L.
+STABLE:	c735355d
+CONTR:	Zach
+
+BUG:	Missing some files in file system
+SOLN:	Fixed inode references, added function to print all files in directory by dentry number.
+STABLE:	a066cfd9
+CONTR:	Max, Paul
+
+BUG:	No vsync. The screen won't move up after moving past the last line
+SOLN:	Fixed video memory writes to move everything up one. Also had to move all the other characters up
+STABLE:	c14eaf25
+CONTR:	Paul, Zach
+
+BUG:	Read file not working correctly (sending seg faults)
+SOLN:	Fixed the indices of file names in directory. Standardized file name length. fixed terminal_write function (Note, stable version immediately prints file contents, not usable for testing)
+STABLE:	20d076f5
+CONTR: 	Paul, Max
+
+BUG:	Not triggering RTC read and write more than once.
+SOLN:	EOI not sending correctly
+STABLE:	d3aa2242
+CONTR:	Andy, Paul
+
+______________Checkpoint 3______________
+
+BUG:	Programs not correctly linking to parent
+SOLN:	Added another value to the PCB struct to contain the parent pid. Additionally added a pid varible that determines where in the address space our programs should run.
+STABLE:	9a1214da
+CONTR:	Zach, Paul
+
+BUG:	Read, Write, Open, Close not working with drivers correctly
+SOLN:	Added a jump table containing the drivers from part 2 and added an index in PCB to hold those functions
+STABLE:	9a1214da
+CONTR: Zach
+
+BUG:	Program page faulted on startup.
+SOLN:	Fixed where in memory our programs began executing at. We did this by specifying our address based on the pid number
+STABLE:	9a1214da
+CONTR:	Andy
+
+BUG:	Hello not including newline after printing user's name
+SOLN:	Return an additional character from the keyboard driver to include the newline that we then print.
+STABLE:	9a1214da
+CONTR:	Max, Zach
+
+______________Checkpoint 4______________
+
+BUG: 	Halt wasn't correctly freeing up video memory virtual pages.
+SOLN:	We based our virtual address on the pid. This way we don't need to search for a free page, we can just use the processes pid
+STABLE: 66072829
+CONTR: 	Zach, Andy
+
+BUG:	Page faulting on vidmap
+SOLN:	Fixed the bits for read_write on the page directory. We were unable to access the page because we didn't give the correct permissions to our page directory.
+STABLE:	62744980
+CONTR:	Zach, Andy
+
+BUG: 	Grep not printing out correct weird values when run.
+SOLN:	Fixed the read arguments in read_dentry_by_name and the execute system call. Additionally we started breaking on the NULL character
+STABLE:	62744980
+CONTR:	Paul, Zach, Max
+
+BUG:	Cat not printing out contents of executable and not delaying when run on rtc.
+SOLN:	RTC defaulted to 1024 Hz, but when we added an argument, it fixed our cat.
+STABLE:	62744980
+CONTR:	Paul
+______________Checkpoint 5______________
+
+BUG:	Keyboard buffers are not all individual. The video memory will print out other terminals keyboard buffer, even if it isn't present in that buffer.
+SOLN:	Separated the virtual video addresses for each terminal and copied the data at every context switch.
+STABLE:	832828f0
+CONTR:	Andy, Paul, Max
+
+BUG:	Cursor not changing per terminal switch.
+SOLN:	Set up three different keyboard buffers, three different cursor locations, and three different video addresses.
+STABLE: 948015c9
+CONTR:	Zach
+
+BUG:	Root shells not executing concurrently
+SOLN:	Set up context switches in the %esp and %ebp registers and set up our round robin scheduling. Additionally, we started all shells at startup
+STABLE: 832828f0
+CONTR:	Andy, Max, Paul, Zach
+
+BUG:	Scheduling causing page faults.
+SOLN:	Halt not deleting the parent's child PCB so we were executing non-existant programs.
+STABLE: 832828f0
+CONTR:	Max, Andy, Paul

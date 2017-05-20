@@ -4,14 +4,23 @@
  */
 
 #include "lib.h"
+#include "paging.h"
+#include "system_call.h"
+#include "i8259.h"
+#include "x86_desc.h"
 #define VIDEO 0xB8000
+#define BIT_MASK_8_BITS0 0x0FF
 #define NUM_COLS 80
 #define NUM_ROWS 25
+
 #define ATTRIB 0x7
+#define FONT1  0x5
+#define FONT2  0x2
+#define FONT3  0x3
 
 #define OFF   0
 #define ON    1
-#define ERR   -1
+#define ERR  -1
 #define SUCC  0
 
 #define CURSOR_DATA    0x3D5
@@ -19,15 +28,15 @@
 #define UPPER_8        14
 #define LOWER_8        15
 
-#define EMPTY_ELEM	   -1
+#define EMPTY_ELEM    -1
+#define SHIFT_VAL 2
 
-
-static int screen_x;
-static int screen_y = 3;
+static int screen_x[TOTAL_TERMS] = {0,0,0};
+static int screen_y[TOTAL_TERMS] = {0,0,0};
 static char* video_mem = (char *)VIDEO;
 
-
-static int keyboard_complete_flag = OFF;
+static int volatile keyboard_complete_flag[TOTAL_TERMS] = {OFF,OFF,OFF};
+static char _attrib_[TOTAL_TERMS] = {FONT1, FONT2, FONT3};
 
 /*
  * Function: set_cursor_pos
@@ -35,14 +44,51 @@ static int keyboard_complete_flag = OFF;
  * Output:   none
  *     Changes the position of the cursor on the screen after write or delete
  */
-void set_cursor_pos() {
-    uint16_t pos = screen_x + screen_y*NUM_COLS;
+void set_cursor_pos(int cur) {
+	if (cur == cur_term){
+		uint16_t pos = screen_x[cur] + screen_y[cur]*NUM_COLS;
 
-    // write the position to the registers:
-    outb(UPPER_8, CURSOR_ATTR);
-    outb((pos>>8) & 0x0FF, CURSOR_DATA);
-    outb(LOWER_8, CURSOR_ATTR);
-    outb(pos & 0x0FF, CURSOR_DATA);
+		// write the position to the registers:
+		outb(UPPER_8, CURSOR_ATTR);
+		outb((pos>>8) & BIT_MASK_8_BITS0, CURSOR_DATA); //bit shift
+		outb(LOWER_8, CURSOR_ATTR);
+		outb(pos & BIT_MASK_8_BITS0, CURSOR_DATA);
+	}
+}
+
+
+/* function: swap_vmem()
+ *   Old function... Not in use
+ */
+void swap_vmem(int from, int to) {
+	int i = 0;
+	// Sanity check args:
+	if(to < 0 || to > 2) return;
+
+	for(i = 0; i < NUM_ROWS*NUM_COLS; i++){
+		video_copiez[from][i << 1] = *(uint8_t*)(video_mem + (i << 1));
+		video_copiez[from][(i << 1) + 1] = *(uint8_t*)(video_mem + (i << 1) + 1);
+	}
+
+	for(i = 0; i < NUM_ROWS*NUM_COLS; i++){
+		*(uint8_t*)(video_mem + (i << 1)) = video_copiez[to][i << 1];
+		*(uint8_t*)(video_mem + (i << 1) + 1) = video_copiez[to][(i << 1) + 1];
+	}
+	return;
+}
+
+
+/* function: disp_vmem()
+ *    This function is responsible for copying the terminal video memory to
+ *    the system video memory at 0x0B8000
+ */
+void disp_vmem(int to) {
+	// Sanity check args:
+	if(to < TERM1 || to > TERM3) return;
+
+	memcpy(video_mem, video_copiez[to], NUM_ROWS*NUM_COLS*2);
+	set_cursor_pos(cur_term);
+	return;
 }
 
 /*
@@ -52,16 +98,22 @@ void set_cursor_pos() {
 *	Function: Clears video memory
 */
 void
-clear(void)
+clear()
 {
-    int32_t i;
-    for(i=0; i<NUM_ROWS*NUM_COLS; i++) {
-        *(uint8_t *)(video_mem + (i << 1)) = ' ';
-        *(uint8_t *)(video_mem + (i << 1) + 1) = ATTRIB;
-    }
-    screen_x = 0;
-    screen_y = 0;
-    set_cursor_pos();
+	int32_t i;
+	for(i = 0; i<NUM_ROWS*NUM_COLS; i++){
+		*(uint8_t *)(video_mem + (i << 1)) = ' ';
+		*(uint8_t *)(video_mem + (i << 1) + 1) = _attrib_[cur_term];
+	}
+}
+void term_clear(int cur){
+	int32_t i;
+	for(i = 0; i<NUM_ROWS*NUM_COLS; i++){
+		*(uint8_t *)(video_copiez[cur] + (i << 1)) = ' ';
+		*(uint8_t *)(video_copiez[cur] + (i << 1) + 1) = _attrib_[cur];
+	}
+	screen_x[cur] = 0;
+	screen_y[cur] = 0;
 }
 
 /* Standard printf().
@@ -99,12 +151,12 @@ printf(int8_t *format, ...)
 					int32_t alternate = 0;
 					buf++;
 
-format_char_switch:
+					format_char_switch:
 					/* Conversion specifiers */
 					switch(*buf) {
 						/* Print a literal '%' character */
 						case '%':
-							putc('%');
+							term_putc(cur_term,'%');
 							break;
 
 						/* Use alternate formatting */
@@ -119,7 +171,7 @@ format_char_switch:
 						/* Print a number in hexadecimal form */
 						case 'x':
 							{
-								int8_t conv_buf[64];
+								int8_t conv_buf[64]; 
 								if(alternate == 0) {
 									itoa(*((uint32_t *)esp), conv_buf, 16);
 									puts(conv_buf);
@@ -166,7 +218,7 @@ format_char_switch:
 
 						/* Print a single character */
 						case 'c':
-							putc( (uint8_t) *((int32_t *)esp) );
+							term_putc(cur_term, (uint8_t) *((int32_t *)esp) );
 							esp++;
 							break;
 
@@ -184,7 +236,7 @@ format_char_switch:
 				break;
 
 			default:
-				putc(*buf);
+				term_putc(cur_term,*buf);
 				break;
 		}
 		buf++;
@@ -203,8 +255,8 @@ int32_t
 puts(int8_t* s)
 {
 	register int32_t index = 0;
-	while(s[index] != '\0') {
-		putc(s[index]);
+	while(s[index] != '\0'){
+		term_putc(cur_term, s[index]);
 		index++;
 	}
 
@@ -214,17 +266,18 @@ puts(int8_t* s)
 
 
 
-/* Shifts the contents of the screen up */
-/* Helper function */
-void shift_screen(){
+/*  shift_screen
+*   Inputs: terminal to shift
+*	Function: Shifts the contents of the screen up
+*/
+void shift_screen(int cur){
 	int i;
-
-    memmove(video_mem, video_mem + 2*(NUM_COLS), (NUM_ROWS - 1)*(NUM_COLS)*2);
-    screen_y = NUM_ROWS - 1;
-    for(i = 0; i < NUM_COLS; i++) {
-    	*(uint8_t *)(video_mem + ((NUM_COLS*screen_y + i) << 1)) = ' ';
-        *(uint8_t *)(video_mem + ((NUM_COLS*screen_y + i) << 1) + 1) = ATTRIB;
-    }
+	memmove(video_copiez[cur], video_copiez[cur] + SHIFT_VAL*(NUM_COLS), (NUM_ROWS - 1)*(NUM_COLS)*SHIFT_VAL);
+	screen_y[cur] = NUM_ROWS - 1;
+	for(i = 0; i < NUM_COLS; i++){
+		*(uint8_t *)(video_copiez[cur] + ((NUM_COLS*screen_y[cur] + i) << 1)) = ' ';
+		*(uint8_t *)(video_copiez[cur] + ((NUM_COLS*screen_y[cur] + i) << 1) + 1) = _attrib_[cur];
+	}
 }
 
 /*
@@ -236,24 +289,44 @@ void shift_screen(){
 void
 putc(uint8_t c)
 {
-    if(c == '\n' || c == '\r') {
-        screen_y++;
-        screen_x=0;
-        if(screen_y >= NUM_ROWS) {
-        	shift_screen();
-	    }
-	    set_cursor_pos();
-    } else {
-        *(uint8_t *)(video_mem + ((NUM_COLS*screen_y + screen_x) << 1)) = c;
-        *(uint8_t *)(video_mem + ((NUM_COLS*screen_y + screen_x) << 1) + 1) = ATTRIB;
-        screen_x++;
-        screen_y = (screen_y + (screen_x / NUM_COLS));
-        screen_x %= NUM_COLS;
-        if(screen_y >= NUM_ROWS) {
-        	shift_screen();
-	    }
-	    set_cursor_pos();
-    }
+	if(c == '\n' || c == '\r'){
+		screen_y[cur_term]++;
+		screen_x[cur_term]=0;
+		if(screen_y[cur_term] >= NUM_ROWS)
+			shift_screen(cur_term);
+	    	
+	} else {
+		*(uint8_t *)(video_mem + ((NUM_COLS*screen_y[cur_term] + screen_x[cur_term]) << 1)) = c;
+		*(uint8_t *)(video_mem + ((NUM_COLS*screen_y[cur_term] + screen_x[cur_term]) << 1) + 1) = ATTRIB;
+		screen_x[cur_term]++;
+		screen_y[cur_term] = (screen_y[cur_term] + (screen_x[cur_term] / NUM_COLS));
+		screen_x[cur_term] %= NUM_COLS;
+		if(screen_y[cur_term] >= NUM_ROWS)
+			shift_screen(cur_term);
+	}
+}
+
+/*
+* void putc(char c);
+*   Inputs: uint_8* c = character to print
+*   Return Value: void
+*	Function: Output a character to the console
+*/
+void
+term_putc(int i, uint8_t c)
+{
+	if(c == '\n' || c == '\r'){
+		screen_y[i]++;
+		screen_x[i]=0;
+		if(screen_y[i] >= NUM_ROWS) shift_screen(i);
+	} else {
+		*(uint8_t *)(video_copiez[i] + ((NUM_COLS*screen_y[i] + screen_x[i]) << 1)) = c;
+		*(uint8_t *)(video_copiez[i] + ((NUM_COLS*screen_y[i] + screen_x[i]) << 1) + 1) = _attrib_[i];
+		screen_x[i]++;
+		screen_y[i] = (screen_y[i] + (screen_x[i] / NUM_COLS));
+		screen_x[i] %= NUM_COLS;
+		if(screen_y[i] >= NUM_ROWS) shift_screen(i);
+	}
 }
 
 /*
@@ -263,7 +336,7 @@ putc(uint8_t c)
  *          -1 if an error occured
  */
 int terminal_open(const uint8_t* filename) {
-    return SUCC;
+	return SUCC;
 }
 
 /*
@@ -285,23 +358,18 @@ int terminal_close(void) {
  */
 int terminal_write(int32_t fd, const void* buf, int32_t length, void* cur_file) {
 	int i = 0;
-
 	char* in_buf = (char*)buf;
 
-	if(in_buf == NULL) {
-		return ERR;
-	}
-	if(length < 0) {
-		return ERR;
+	if(in_buf == NULL) return ERR;
+	if(length < 0) return ERR;
+
+	for(i = 0; i < length; i++) {
+		term_putc(get_pcb()->term_parent, in_buf[i]);
 	}
 
-    for(i = 0; i < length; i++) {
-    	putc(in_buf[i]);
-    }
-
-    return i;
+	return i;
 }
-
+//--it might be usefull to have a function to print to the displayed terminal, and a function to print to the active terminal --
 /*
  * Function: terminal_read
  * Input: 	in_buf - buffer to be written to
@@ -310,28 +378,25 @@ int terminal_write(int32_t fd, const void* buf, int32_t length, void* cur_file) 
  *          -1 if an error occured
  */
 int terminal_read(int32_t fd, void* buf, int32_t length, void* cur_file) {
-    int i = 0;
-    char* in_buf = (char*)buf;
+	int i = 0;
+	char* in_buf = (char*)buf;
+	sti();
+	PCB* cur_pcb = get_pcb();
+	if(in_buf == NULL) return ERR;
+	if(length < 0) return ERR;
+	
+	while(keyboard_complete_flag[cur_pcb->term_parent] == OFF) { }
 
-	if(in_buf == NULL) {
-		return ERR;
+	// Begin copy:
+	for(i = 0; i < KBD_BUF_SIZE && i < length; i++) {
+		in_buf[i] = keyboard_bufs[cur_pcb->term_parent][i];
+		if(in_buf[i] == '\n' || in_buf[i] == '\r')
+			break;
 	}
-	if(length < 0) {
-		return ERR;
-	}
-    while(keyboard_complete_flag == OFF) { }
 
-    // Begin copy:
-    for(i = 0; i < KBD_BUF_SIZE && i < length; i++) {
-        in_buf[i] = keyboard_buf[i];
-        if(in_buf[i] == '\n' || in_buf[i] == '\r') {
-        	break;
-        }
-    }
+	keyboard_complete_flag[cur_pcb->term_parent] = OFF;
 
-    keyboard_complete_flag = OFF;
-
-    //include line feed character
+	//include line feed character
 	return (i + 1);
 }
 
@@ -351,62 +416,74 @@ add_kbd_buf(int8_t* buf, char c, int* buf_end)
 	int delete_key = 0;
 
 	//Check for clear screen
-    if(c == CTRL_L) {
-        clear();
-        *buf_end = 0;
-        return;
-    }
-
-
-	/* Determine if a character should be deleted */
-	if(c==BKSP){
-		delete_key=1;
+	if(c == CTRL_L) {
+		term_clear(cur_term);
+		buf_end[cur_term] = 0;
+		return;
 	}
 
-
-	/* Delete key */
-	if(delete_key == 1){
-		if(*buf_end > 0){
-			*buf_end-=1;
-			screen_x--;
-			*(uint8_t *)(video_mem + ((NUM_COLS*screen_y + screen_x) << 1)) = ' ';
-	        set_cursor_pos();
-
+	if((c == ALTF1 && cur_term != TERM1) || (c == ALTF2 && cur_term != TERM2) || (c == ALTF3 && cur_term != TERM3)){
+		if(c == ALTF1 && cur_term != TERM1){
+			cur_term = TERM1;
+		}
+		if(c == ALTF2 && cur_term != TERM2){
+			cur_term = TERM2;
+		}
+		if(c == ALTF3 && cur_term != TERM3){
+			cur_term = TERM3;
 		}
 		return;
 	}
-	if(*buf_end < KBD_BUF_SIZE-1){
-	    if(c == '\n' || c == '\r') {
-	        screen_y++;
-	        screen_x=0;
-	        buf[*buf_end]=c;
-	        *buf_end=0;
-	        keyboard_complete_flag = ON;
 
-	        if(screen_y >= NUM_ROWS) {
-	        	shift_screen();
-	        }
-	        set_cursor_pos();
-	        return;
+	if((c == ALTF1 )|| (c == ALTF2) || (c == ALTF3 )) return;
+
+
+	/* Determine if a character should be deleted */
+	if(c == BKSP){
+		delete_key = 1;
+	}
+
+	/* Delete key */
+	if(delete_key == 1){
+		if(buf_end[cur_term] > 0){
+			buf_end[cur_term]-=1;
+			screen_x[cur_term]--;
+			*(uint8_t *)(video_copiez[cur_term] + ((NUM_COLS*screen_y[cur_term] + screen_x[cur_term]) << 1)) = ' ';
+            		*(uint8_t *)(video_copiez[cur_term] + ((NUM_COLS*screen_y[cur_term] + screen_x[cur_term]) << 1) + 1) = _attrib_[cur_term];
+		}
+		return;
+	}
+
+	if(buf_end[cur_term] < KBD_BUF_SIZE-1){
+		if(c == '\n' || c == '\r') {
+		    	if(keyboard_complete_flag[cur_term] == ON) return;
+		        screen_y[cur_term]++;
+		        screen_x[cur_term] = 0;
+		        buf[buf_end[cur_term]] = c;
+		        buf_end[cur_term] = 0;
+		        keyboard_complete_flag[cur_term] = ON;
+
+		        if(screen_y[cur_term] >= NUM_ROWS) {
+		        	shift_screen(cur_term);
+		        }
+	        	return;
 		}
 	}
 
 	/* Add new character to array and leave an extra space for enter*/
-	if(*buf_end < KBD_BUF_SIZE-2){
-        *(uint8_t *)(video_mem + ((NUM_COLS*screen_y + screen_x) << 1)) = c;
-        *(uint8_t *)(video_mem + ((NUM_COLS*screen_y + screen_x) << 1) + 1) = ATTRIB;
-        screen_x++;
-        screen_y = (screen_y + (screen_x / NUM_COLS));
-        screen_x %= NUM_COLS;
+	if(buf_end[cur_term] < KBD_BUF_SIZE-SHIFT_VAL){
+		*(uint8_t *)(video_copiez[cur_term] + ((NUM_COLS*screen_y[cur_term] + screen_x[cur_term]) << 1)) = c;
+		*(uint8_t *)(video_copiez[cur_term] + ((NUM_COLS*screen_y[cur_term] + screen_x[cur_term]) << 1) + 1) = _attrib_[cur_term];
+		screen_x[cur_term]++;
+		screen_y[cur_term] = (screen_y[cur_term] + (screen_x[cur_term] / NUM_COLS));
+		screen_x[cur_term] %= NUM_COLS;
 
-        buf[*buf_end]=c;
-        (*buf_end)+=1;
-        if(screen_y >= NUM_ROWS) {
-        	shift_screen();
-	    }
-	    set_cursor_pos();
+		buf[buf_end[cur_term]]=c;
+		(buf_end[cur_term])+=1;
+		if(screen_y[cur_term] >= NUM_ROWS) shift_screen(cur_term);
 	}
 }
+
 /*
 * void print_kbd_buf(int8_t* buf);
 *   Inputs: int8_t* buf = kbd_buf to print
@@ -418,10 +495,9 @@ print_kbd_buf(int8_t* buf)
 {
 	int i;
 	for(i = 0; i < KBD_BUF_SIZE; i++){
-		if(buf[i]==EMPTY_ELEM){
-			return;
-		}
-		putc(buf[i]);
+		if(buf[i]==EMPTY_ELEM) return;
+
+		term_putc(cur_term, buf[i]);
 	}
 }
 

@@ -20,11 +20,12 @@
 #define RTC_STATUS_C    0x0C
 #define RTC_IRQ         0x8
 #define RTC_STATUS      0x80
+#define NUM_PROC 3
 
 // RTC Functions
 //-------------------------------------------------------------------
 // Handles the rtc interrupts
-int volatile rtc_flag;
+int volatile rtc_flag[NUM_PROC];
 
 extern void rtc_handler(void);
 

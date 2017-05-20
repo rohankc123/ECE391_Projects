@@ -302,7 +302,12 @@ exception1F_code:
 	popal
 	iret
 
+# pit interrupt
 interrupt20_code:
+	cli
+	pushal
+	call scheduler
+	popal
 	iret
 
 # Keyboard Interrupt
@@ -366,7 +371,7 @@ interrupt2F_code:
 syscall_code:
   pushl %ebp
   movl %esp, %ebp
-
+  # system calls between 1 and 10 check
   cmpl $1, %eax
   jl err
 
@@ -383,7 +388,7 @@ syscall_code:
   pushl %ecx
   pushl %ebx
 
-  call *jumptable(,%eax,4)
+  call *jumptable(,%eax,4) # use 4 because address is 32 bits
 
   popl %ebx
   popl %ecx
@@ -396,8 +401,6 @@ syscall_code:
   
   leave
   iret
-  
-
 
 jumptable:
   .long halt, execute, read, write, open, close, getargs, vidmap, set_handler, sigreturn
@@ -407,14 +410,3 @@ err:
   decl %eax
   leave
   iret
-
-prac_sys_call:
-  push %ebp
-  movl %esp, %ebp
-  movl 12(%ebp), %ebx
-  movl $0, %ecx
-  movl $0, %edx
-  movl  8(%ebp), %eax
-  int $0x80
-  leave
-  ret

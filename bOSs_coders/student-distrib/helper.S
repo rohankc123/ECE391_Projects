@@ -3,7 +3,7 @@
 
 #define USER_START $0x08000000
 #define PROGRAM_SIZE $0x0400000
-
+#define FIRST_ARG 8
 .globl entrypoint
 .globl sys_halt
 
@@ -14,7 +14,7 @@ entrypoint:
 	mov 	$USER_DS, %ax
 	mov 	%ax, %ds
 	# EIP
-	movl 	8(%ebp), %eax
+	movl 	FIRST_ARG(%ebp), %eax
 	# CS
 	movl 	$USER_CS, %ebx
 	# SS
@@ -23,12 +23,12 @@ entrypoint:
 	# esp
 	movl 	USER_START, %esi	 # user level esp points to the bottom of program
 	addl 	PROGRAM_SIZE, %esi
-	subl 	$0x04, %esi
+	subl 	$0x04, %esi # subtract 4 so we are in the correct page
 	pushl 	%ecx
 	pushl 	%esi
 	pushfl
 	popl 	%edx
-	orl 	$0x200, %edx
+	orl 	$0x200, %edx # interrupt enable flag
 	pushl 	%edx
 	pushl 	%ebx
 	pushl 	%eax
@@ -36,7 +36,7 @@ entrypoint:
 	pushl 	%esp
 	pushl 	%ebp
 	call  	set_fr
-	addl  	$8, %esp
+	addl  	$FIRST_ARG, %esp
 	iret
 
 halt_done:
@@ -52,15 +52,15 @@ halt_done:
 sys_halt:
 	pushl   %ebp
 	movl    %esp, %ebp
+	xorl 	%ebx, %ebx
+	movl 	FIRST_ARG(%ebp), %ebx
+
 	call    get_pcb
-
-	xorl %ebx, %ebx
-	movl 	8(%ebp), %ebx
-
-	movl    8(%eax), %eax
-	movl    4(%eax), %ebp
+	
+	movl    FIRST_ARG(%eax), %eax
+	movl    4(%eax), %ebp #get the parent_pcb pointer
 	movl    (%eax), %esp
 
-	movl %ebx, %eax
+	movl 	%ebx, %eax
 	# status
-	jmp halt_done
+	jmp 	halt_done

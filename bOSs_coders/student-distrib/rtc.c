@@ -5,9 +5,10 @@
 //-------------------------------------------------------------------
 
 #include "rtc.h"
+#include "pit.h"
 #include "i8259.h"
 #include "lib.h"
-
+#include "pcb.h"
 #define FREQ1  2
 #define FREQ2  4
 #define FREQ3  8
@@ -29,6 +30,11 @@
 #define RATE9  7
 #define RATE10 6
 #define RATE_MASK 0x0F
+#define NUM_PROC 3
+#define IRQ_RTC 8
+#define RTC_OUT_VAL 0x80
+#define RTC_OUT_VAL2 0x40
+#define TOP_4_MASK 0xF0
 
 // RTC Functions
 //-------------------------------------------------------------------
@@ -44,12 +50,15 @@
 
    // send the "RTC EOI"
    rtc_eoi();
-   rtc_flag = 1;
-   send_eoi(8);
+   int i = 0;
+   for (i = 0; i < NUM_PROC; i++){
+     rtc_flag[i] = 1;
+   }
+      // send the "RTC EOI" irq 8
+   send_eoi(IRQ_RTC);
 
    return;
 }
-
 
 /*
  * rtc_init
@@ -61,7 +70,7 @@
  */
  void rtc_init() {
     rtc_enable();
-    enable_irq(8);
+    enable_irq(IRQ_RTC);
     return;
 }
 
@@ -77,10 +86,10 @@ void rtc_enable() {
     unsigned char prev;
 //    unsigned int rate = 15;
 
-    outb(0x80 | RTC_STATUS_B, RTC_REG);
+    outb(RTC_OUT_VAL | RTC_STATUS_B, RTC_REG);
     prev = inb(RTC_CMOS);
-    outb(0x80 | RTC_STATUS_B, RTC_REG);
-    outb(prev | 0x40, RTC_CMOS);
+    outb(RTC_OUT_VAL | RTC_STATUS_B, RTC_REG);
+    outb(prev | RTC_OUT_VAL2, RTC_CMOS);
     return;
 }
 
@@ -99,7 +108,7 @@ void rtc_disable() {
     outb(RTC_STATUS | RTC_STATUS_B, RTC_REG);
     prev = inb(RTC_CMOS);
     outb(RTC_STATUS | RTC_STATUS_B, RTC_REG);
-    outb(~(prev | 0x40), RTC_CMOS); //turn on bit 6 of register b
+    outb(~(prev | RTC_OUT_VAL2), RTC_CMOS); //turn on bit 6 of register b
 
     return;
 }
@@ -130,14 +139,16 @@ void rtc_eoi() {
  */
 int32_t rtc_read(int32_t fd, void* buf, int32_t n_bytes, void* cur_file)
 {
+  //printf("reading rtc\n");
   (void) fd;
   (void) buf;
   (void) n_bytes;
   (void) cur_file;
-  rtc_flag = 0;
+  PCB* cur_pcb = get_pcb();
+  rtc_flag[cur_pcb->term_parent] = 0;
   while(1)
   {
-    if (rtc_flag ==1) break;
+    if (rtc_flag[cur_pcb->term_parent] == 1) break;
   }
   return 0;
 }
@@ -157,7 +168,8 @@ int32_t rtc_write(int32_t fd, const void* buf, int32_t n_bytes, void* cur_file)
   unsigned char prev;
   int32_t rate = 0;
   int32_t frequency;
-  rtc_flag =1;
+  int i;
+  for (i = 0; i < NUM_PROC; i++) rtc_flag[i] =1;
   if ((int32_t*)buf)
   {
     frequency = *(int32_t*)buf;
@@ -202,7 +214,7 @@ int32_t rtc_write(int32_t fd, const void* buf, int32_t n_bytes, void* cur_file)
      outb(RTC_STATUS | RTC_STATUS_A, RTC_REG);
      prev = inb(RTC_CMOS);
      outb(RTC_STATUS | RTC_STATUS_A, RTC_REG);
-     outb((prev & 0xF0) | rate, RTC_CMOS);
+     outb((prev & TOP_4_MASK) | rate, RTC_CMOS);
      sti();
      return 0; //success
   }

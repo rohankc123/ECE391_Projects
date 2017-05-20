@@ -13,6 +13,9 @@
 #include "excp_int_sys.h"
 #include "x86_desc.h"
 #include "system_call.h"
+#include "pit_init.h"
+#include "ps2_keyboard.h"
+#include "music.h"
 
 /* Macros. */
 /* Check if the bit BIT in FLAGS is set. */
@@ -152,23 +155,72 @@ entry (unsigned long magic, unsigned long addr)
 	}
 
 	clear();
-	if(init_idt() == -1); //TODO: Add error handling
+	if(init_idt() == -1);
 
 	/* Init the PIC */
 	i8259_init();
-
-	/* Initialize devices, memory, filesystem, enable device interrupts on the
-	 * PIC, any other initialization stuff... */
-	initialize_kb();
 	rtc_init();
-	paging_init();
+	cur_term = TERM1;
 
+	init_callbacks();
+
+	int32_t freq = 2; //default frequency
+
+	rtc_write(0, &freq, 4, &freq); //4 byte arg
+
+	video_copiez[TERM1] = (char*)VIDEO_1;
+	video_copiez[TERM2] = (char*)VIDEO_2;
+	video_copiez[TERM3] = (char*)VIDEO_3;
+
+    // Begin epic boot sequence:
+    sti();
+	printf(" ``````..................`````````````````````````           `.-------------... ");
+	printf(" ```.................-..```````.-..`````...````....``````     `.--------------- ");
+	printf(" `..................--.````...:/oso+:::-/o+++//////::-..````   `--------------- ");
+	printf(" ................----.```.:+shdddddddyyyyhhhyyyssoo+//:-..```   .-:::::-------- ");
+	printf(" .............-------.`.-+yhdmmmmmmmmmmdddddhhyyysoo+++/--..``` `-:::::::::---- ");
+	printf(" ...........---------..-/yhdmmmmmNNmmmmmddddhhyyyssoo++/:--.``` `-:::::::::::-- ");
+	printf(" ..........----------.--shddmmmmmNNNNNNmmdddhhhyysoo++++/:-..`   .::::::::::::- ");
+	printf(" ........-------------.:yhddmmmmmNNmmmNNNmmddhhyo++++++++/:-.``  `.:::::::::::: ");
+	printf(" ......----------------:hdddddmmNNNmmmNNNmdhyo//++++//++++/-``` ```-::::::::::: ");
+	printf(" ......----------------:hdhhhhyyyyyhdddddyso+oyyso++/////:-.````...:::::::::::: ");
+	printf(" ..--------------------.ydhddmmmmdhhddmmhssyhys+:+/+oo///++/.`..::.:::::::::::: ");
+	printf(" .-----------------::--./syhhyyy+/shdshyoooydydo+soossyoo+//-...-/-:::::::::::: ");
+	printf(" -----------------:::::+/+ohhhddyshdm+dmy++shdhyyyyyssso++//:-``.:::::::::::::: ");
+	printf(" -----------------:::::soysddmmmmmmmmhmdy+osydddddhhyso+++//:.--:/::::::::::::: ");
+	printf(" --------------::::::::/shdmmmNNNNNmmmmdyo+oohmmmmdhysooo+///:::::::::::::::::: ");
+	printf(" -----------::::::::::::sddmmNNNNNmmmmmmyo+o+odmmmdhyssoo++//:-..:::::::::::::: ");
+	printf(" -----:::::::::::::::::::sdmmmNNmmmmhhdho/-:/:ydmddyysooo++//:``-:::::::::::::: ");
+	printf(" ------::::::::::::::::::/odmmmmmdmmmmmhssoossssyhyyso+++++//:.-::::::::::::::: ");
+	printf(" -----::::::::::::::::::///hddddhhhdddmdddyso+/:-+sso++++++//:-::/::::::::::::: ");
+	printf(" ----:::::::::::::::::::///+hdddhs+syyssyo++///+oshhs+//////:-`-:/::::::::::::: ");
+	printf(" ---::::::::::::::::::::////+hhhhhdmmddddhyyyssyyyyyo//////::````-/:::::::::::: ");
+	printf(" ----::::::::::::::::::///::::+yyhdmmmmmmmddhhyyyso+//::::::-`````.-::::::::::: ");
+	printf(" ----:::::::::::::::::--.......-/shddddmmddhyysoo+/:::::::/:```````` `-:::::::: ");
+	printf(" ---::::::::::::::::............../ssyyysso++//:::::----:/- ````````   `-:::::: ");
+	printf(" ---::::::::::::::................:dyso+///////::-----://`  ``````  ``````-::::");
+    disp_vmem(0);
+    //boot_noyes();
+    star_wars();
+    clear();
+    term_clear(0);
+    cli();
+
+
+	pit_init();
+	initialize_kb();
+	paging_init();
 	/* Enable interrupts */
 	/* Do not enable the following until after you have set up your
 	 * IDT correctly otherwise QEMU will triple fault and simple close
 	 * without showing you any output */
-	/* printf("Enabling Interrupts\n"); */
 	sti();
+
+
+	/* Initialize devices, memory, filesystem, enable device interrupts on the
+	 * PIC, any other initialization stuff... */
+
+
 
 /************************************ test index ************************************
 	clear();
@@ -272,27 +324,8 @@ entry (unsigned long magic, unsigned long addr)
 */
 
 	//* Execute the first program (shell') ...
-	init_callbacks();
-	root_shell();
-	//uint8_t fname[] = "shell";
-  //int result = prac_sys_call(2, fname);
-	//printf("done! %d \n ", result);
-	//*/
 
-	/*
-	 * Function: terminal_read
-	 * Input: 	in_buf - buffer to be written to
-	 *        	length - length of the input buffer
-	 * Output:	returns the number of sucessfully read chars
-	 *          -1 if an error occured
-	 */
-	/*
-	char buf[128];
-	printf("idt: %x \n \n", idt);
-	open_file* cur_file = NULL;
-	terminal_read(1, buf, 128, cur_file);
-	printf(" \ndone");
-	//*/
+
 	/* Spin (nicely, so we don't chew up cycles) */
 	asm volatile(".1: hlt; jmp .1;");
 }
